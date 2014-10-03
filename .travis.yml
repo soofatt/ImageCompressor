@@ -1,0 +1,4 @@
+language: c
+  - gcc
+  - clang
+script: rake test:all

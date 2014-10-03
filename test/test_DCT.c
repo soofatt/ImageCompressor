@@ -28,3 +28,11 @@ void test_cos_DCT_case3(){
 	
 	TEST_ASSERT_FLOAT_WITHIN(0.001, 0.5, result);
 }
+
+void test_cos_DCT_case4(){
+	float result;
+	
+	result = cos_DCT(5, 1, 4);
+	
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -0.382, result);
+}
