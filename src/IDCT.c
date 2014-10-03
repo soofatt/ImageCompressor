@@ -1,4 +1,5 @@
 #include "IDCT.h"
+#include <math.h>
 
 float cos_IDCT(int numerator, int denominator){
   float cosANS;
