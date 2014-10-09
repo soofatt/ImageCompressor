@@ -54,3 +54,14 @@ void test_adderFunction_case2(){
   
   TEST_ASSERT_FLOAT_WITHIN(0.001, 0, result);
 }
+
+void test_DCT_Function(){
+  int imageMatrix[3] = {1, 2, 3};
+  float DCTArray[3] = {0};
+  
+  DCT_Function(DCTArray, imageMatrix, sizeof(DCTArray)/sizeof(float));
+  
+  TEST_ASSERT_FLOAT_WITHIN(0.001, 3.464, DCTArray[0]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, -1.414, DCTArray[1]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, 0, DCTArray[2]);
+}

@@ -17,12 +17,27 @@ float cos_DCT(int sumIndex, int DCTArrayIndex, int numOfElement){
 
 float adderFunction(int *imageMatrix, int DCTArrayIndex, int numOfElement){
   int x;
-  float result, temp;
+  float result = 0, temp;
   
   for(x = 0; x < numOfElement; x++){
     temp = imageMatrix[x] * (cos_DCT(x, DCTArrayIndex, numOfElement));
     result = result + temp;
   }
-
+  
   return result;
+}
+
+void DCT_Function(float *DCTArray, int *imageMatrix, int numOfElement){
+  int u;
+  float coeff = 0;
+  
+  for(u = 0; u < numOfElement; u++){
+    if(u == 0)
+      coeff = 1/(sqrt(2));
+    else
+      coeff = 1;
+
+    DCTArray[u] = sqrt(2.0/numOfElement) * coeff * adderFunction(imageMatrix, u, numOfElement);
+  }
+  
 }
