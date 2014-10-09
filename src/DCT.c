@@ -4,14 +4,25 @@
 
 #define PI 3.14159265
 
-float cos_DCT(int sumIndex, int DCTArrayIndex, int DCTArraySize){
-	float nominator, result;
-	int denominator;
+float cos_DCT(int sumIndex, int DCTArrayIndex, int numOfElement){
+	float nominator, denominator, result;
 	
-	nominator = PI * (2*sumIndex + 1) * DCTArrayIndex;
-	denominator = 2 * DCTArraySize;
+	nominator = PI * (2 * sumIndex + 1) * DCTArrayIndex;
+	denominator = 2 * numOfElement;
 	
 	result = nominator/denominator;
 	
 	return cos(result);
+}
+
+float adderFunction(int *imageMatrix, int DCTArrayIndex, int numOfElement){
+  int x;
+  float result, temp;
+  
+  for(x = 0; x < numOfElement; x++){
+    temp = imageMatrix[x] * (cos_DCT(x, DCTArrayIndex, numOfElement));
+    result = result + temp;
+  }
+
+  return result;
 }

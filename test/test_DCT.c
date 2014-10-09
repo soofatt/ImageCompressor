@@ -36,3 +36,21 @@ void test_cos_DCT_case4(){
 	
 	TEST_ASSERT_FLOAT_WITHIN(0.001, -0.382, result);
 }
+
+void test_adderFunction_case1(){
+  float result;
+  int imageMatrix[3] = {1, 2, 3};
+  
+  result = adderFunction(imageMatrix, 1, 3);
+  
+  TEST_ASSERT_FLOAT_WITHIN(0.001, -1.732, result);
+}
+
+void test_adderFunction_case2(){
+  float result;
+  int imageMatrix[3] = {1, 2, 3};
+  
+  result = adderFunction(imageMatrix, 2, 3);
+  
+  TEST_ASSERT_FLOAT_WITHIN(0.001, 0, result);
+}
