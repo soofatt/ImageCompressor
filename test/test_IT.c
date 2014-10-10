@@ -7,7 +7,7 @@ void setUp(void){}
 void tearDown(void){}
 
 void test_DCT_transform_array_of_3_elements_and_should_invert_back_to_original_by_IDCT(){
-  int imageMatrix[3] = {1, 2, 3};
+  float imageMatrix[3] = {1, 2, 3};
   float DCTArray[3] = {0};
   int invTransVal[3];
   
@@ -25,7 +25,7 @@ void test_DCT_transform_array_of_3_elements_and_should_invert_back_to_original_b
 }
 
 void test_DCT_transform_array_of_8_elements_and_should_invert_back_to_original_by_IDCT(){
-  int imageMatrix[8] = {1,2,3,4,5,6,7,8};
+  float imageMatrix[8] = {1,2,3,4,5,6,7,8};
   float DCTArray[8] = {0};
   int invTransVal[8];
 

@@ -39,7 +39,7 @@ void test_cos_DCT_case4(){
 
 void test_adderFunction_case1(){
   float result;
-  int imageMatrix[3] = {1, 2, 3};
+  float imageMatrix[3] = {1, 2, 3};
   
   result = adderFunction(imageMatrix, 1, 3);
   
@@ -48,7 +48,7 @@ void test_adderFunction_case1(){
 
 void test_adderFunction_case2(){
   float result;
-  int imageMatrix[3] = {1, 2, 3};
+  float imageMatrix[3] = {1, 2, 3};
   
   result = adderFunction(imageMatrix, 2, 3);
   
@@ -56,7 +56,7 @@ void test_adderFunction_case2(){
 }
 
 void test_DCT_Function(){
-  int imageMatrix[3] = {1, 2, 3};
+  float imageMatrix[3] = {1, 2, 3};
   float DCTArray[3] = {0};
   
   DCT_Function(DCTArray, imageMatrix, sizeof(DCTArray)/sizeof(float));
