@@ -63,18 +63,11 @@ void test_oneD_IDCT_with_a_transform_array_should_return_1_2_3(){
   float transVal[] = {3.464, -1.414, 0};
   int invTransVal[3];
   
-  oneD_IDCT(transVal, invTransVal, 0, 3);
-  oneD_IDCT(transVal, invTransVal, 1, 3);
-  oneD_IDCT(transVal, invTransVal, 2, 3);
+  oneD_IDCT(transVal, invTransVal,3);
   
-  printf("Inverse Transform 0: %d\n",invTransVal[0]);
-  printf("Inverse Transform 1: %d\n",invTransVal[1]);
-  printf("Inverse Transform 2: %d\n",invTransVal[2]);
-  
-  
-  
-  
-  
+  TEST_ASSERT_EQUAL(1,invTransVal[0]);
+  TEST_ASSERT_EQUAL(2,invTransVal[1]);
+  TEST_ASSERT_EQUAL(3,invTransVal[2]);
 }
 
 

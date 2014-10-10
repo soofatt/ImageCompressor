@@ -8,5 +8,5 @@
 
 float cos_IDCT(int numerator, int denominator);
 float int_Divider(int numerator, int denominator);
-void oneD_IDCT(float transVal[], int invTransVal[], int index, int noOfElement);
+void oneD_IDCT(float transVal[], int invTransVal[], int noOfElement);
 #endif // IDCT_H
