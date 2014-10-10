@@ -12,7 +12,14 @@ float int_Divider(int numerator, int denominator){
   return div;
 }
 
-void oneD_IDCT(float transVal[], int invTransVal[], int noOfElement){
+void round_float(float invTransVal[], int noOfELement){
+  int i;
+  for(i = 0; i < noOfELement; i++){
+    invTransVal[i] = round(invTransVal[i]);
+  }
+}
+
+void oneD_IDCT(float transVal[], float invTransVal[], int noOfElement){
   int i, num, den, index;
   float Cu, cosAns, divAns, total = 0;
   
@@ -33,7 +40,7 @@ void oneD_IDCT(float transVal[], int invTransVal[], int noOfElement){
     }
     // printf("          Total %d : %f\n",index,total);
     // printf("Round off Total %d : %f\n",index,round(total));
-    invTransVal[index] = round(total);
+    invTransVal[index] = total;
     total = 0;
   }
 }

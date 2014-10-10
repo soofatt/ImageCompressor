@@ -61,9 +61,10 @@ void test_int_division_to_divide_1_by_3_should_return_0_dot_333(){
 
 void test_oneD_IDCT_with_a_transform_array_should_return_1_2_3(){
   float transVal[] = {3.464, -1.414, 0};
-  int invTransVal[3];
+  float invTransVal[3];
   
   oneD_IDCT(transVal, invTransVal,3);
+  round_float(invTransVal, 3);
   
   TEST_ASSERT_EQUAL(1,invTransVal[0]);
   TEST_ASSERT_EQUAL(2,invTransVal[1]);
