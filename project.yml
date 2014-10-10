@@ -62,6 +62,15 @@
 # As [:tools] is blank, gcc will be used (so long as it's in your system path)
 # See documentation to configure a given toolchain for use
 
+:tools:
+  :test_linker:
+    :executable: gcc
+    :name: 'gcc'
+    :arguments:
+    - ${1}
+    - -lm
+    - -o ${2}
+
 :plugins:
   :load_paths:
     - vendor/ceedling/plugins
