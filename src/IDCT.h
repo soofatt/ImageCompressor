@@ -7,6 +7,6 @@
 #define PI 3.14159265
 
 float cos_IDCT(int numerator, int denominator);
-void oneD_IDCT();
-
+float int_Divider(int numerator, int denominator);
+void oneD_IDCT(float transVal[], int invTransVal[], int index, int noOfElement);
 #endif // IDCT_H
