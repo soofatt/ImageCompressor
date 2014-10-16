@@ -61,15 +61,54 @@ void test_int_division_to_divide_1_by_3_should_return_0_dot_333(){
 
 void test_oneD_IDCT_with_a_transform_array_should_return_1_2_3(){
   float transVal[] = {3.464, -1.414, 0};
-  float invTransVal[3];
   
-  oneD_IDCT(transVal, invTransVal,3);
-  round_float(invTransVal, 3);
+  oneD_IDCT(transVal,3);
+  round_float(transVal, 3);
   
-  TEST_ASSERT_EQUAL(1,invTransVal[0]);
-  TEST_ASSERT_EQUAL(2,invTransVal[1]);
-  TEST_ASSERT_EQUAL(3,invTransVal[2]);
+  TEST_ASSERT_EQUAL(1,transVal[0]);
+  TEST_ASSERT_EQUAL(2,transVal[1]);
+  TEST_ASSERT_EQUAL(3,transVal[2]);
 }
+
+void test_transpose_2D_should_tranpose_the_2D_array(){
+  int size = 3;
+  float input2D[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+  
+  transpose_2D(size,input2D);
+  TEST_ASSERT_EQUAL(1,input2D[0][0]);
+  TEST_ASSERT_EQUAL(2,input2D[1][0]);
+  TEST_ASSERT_EQUAL(3,input2D[2][0]);
+  TEST_ASSERT_EQUAL(4,input2D[0][1]);
+  TEST_ASSERT_EQUAL(5,input2D[1][1]);
+  TEST_ASSERT_EQUAL(6,input2D[2][1]);
+  TEST_ASSERT_EQUAL(7,input2D[0][2]);
+  TEST_ASSERT_EQUAL(8,input2D[1][2]);
+  TEST_ASSERT_EQUAL(9,input2D[2][2]);
+}
+
+void test_2D_IDCT_with_2D_array_should_get_back_the_origin_value(){
+  int size = 3;
+  float transVal[3][3] = {{5.999824,-2.449120,0},{-0,0,0},{-0,0,0}};
+  // 2d_Array[r][c]
+  twoD_IDCT(size, transVal);
+  
+  TEST_ASSERT_EQUAL(1,transVal[0][0]);
+  TEST_ASSERT_EQUAL(1,transVal[1][0]);
+  TEST_ASSERT_EQUAL(1,transVal[2][0]);
+  TEST_ASSERT_EQUAL(2,transVal[0][1]);
+  TEST_ASSERT_EQUAL(2,transVal[1][1]);
+  TEST_ASSERT_EQUAL(2,transVal[2][1]);
+  TEST_ASSERT_EQUAL(3,transVal[0][2]);
+  TEST_ASSERT_EQUAL(3,transVal[1][2]);
+  TEST_ASSERT_EQUAL(3,transVal[2][2]);
+}
+
+
+
+
+
+
+
 
 
 
