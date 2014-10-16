@@ -25,18 +25,25 @@ int square_root(int val){
   return ans;
 }
 
-void transpose_2D(int size,float matrix[][size], float transposeMatrix[][size]){
+void transpose_2D(int size,float matrix[][size]){
   int row, col;
+  float transposeMatrix[size][size];
   for(row = 0; row<size; row++){
     for(col = 0; col<size; col++){
       transposeMatrix[col][row] = matrix[row][col];
     }
   }
+  for(row = 0; row<size; row++){
+    for(col = 0; col<size; col++){
+      matrix[row][col] = transposeMatrix[row][col];
+    }
+  }
 }
 
-void oneD_IDCT(float transVal[], float invTransVal[], int noOfElement){
+void oneD_IDCT(float transVal[], int noOfElement){
   int i, num, den, index;
   float Cu, cosAns, divAns, total = 0;
+  float invTransVal[noOfElement];
   
   for(index = 0;index < noOfElement; index++){
     for(i = 0; i < noOfElement; i++){
@@ -58,14 +65,21 @@ void oneD_IDCT(float transVal[], float invTransVal[], int noOfElement){
     invTransVal[index] = total;
     total = 0;
   }
+  for(i = 0; i < noOfElement; i ++){
+    transVal[i] = invTransVal[i];
+  }
 }
 
-void twoD_IDCT(int size,float transVal[][size],float invTransVal[][size]){
+void twoD_IDCT(int size,float transVal[][size]){
   int row, column;
-  
-  for(column = 0; column < size; column++){
-    for(row = 0; row < size; row++){
-      printf("%f  ",transVal[row][column]);
+  int loop;
+  for(loop = 0; loop<2; loop++){
+    transpose_2D(size,transVal);  
+    for(row = 0;row < size; row++){
+      oneD_IDCT(transVal[row],size);
     }
+  }
+  for(row = 0;row < size; row++){
+    round_float(transVal[row],size);
   }
 }
