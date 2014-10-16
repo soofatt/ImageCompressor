@@ -70,12 +70,6 @@ void test_oneD_IDCT_with_a_transform_array_should_return_1_2_3(){
   TEST_ASSERT_EQUAL(3,transVal[2]);
 }
 
-void test_square_root_function(){
-  int val = 9, sq_rt;
-  sq_rt = square_root(val);
-  TEST_ASSERT_EQUAL(3,sq_rt);
-}
-
 void test_transpose_2D_should_tranpose_the_2D_array(){
   int size = 3;
   float input2D[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
