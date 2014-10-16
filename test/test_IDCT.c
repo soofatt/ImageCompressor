@@ -71,5 +71,53 @@ void test_oneD_IDCT_with_a_transform_array_should_return_1_2_3(){
   TEST_ASSERT_EQUAL(3,invTransVal[2]);
 }
 
+void test_square_root_function(){
+  int val = 9, sq_rt;
+  sq_rt = square_root(val);
+  TEST_ASSERT_EQUAL(3,sq_rt);
+}
+
+void test_transpose_2D_should_tranpose_the_2D_array(){
+  int size = 3;
+  float input2D[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+  float transpose2D[size][size];
+  
+  transpose_2D(size,input2D,transpose2D);
+  TEST_ASSERT_EQUAL(1,transpose2D[0][0]);
+  TEST_ASSERT_EQUAL(2,transpose2D[1][0]);
+  TEST_ASSERT_EQUAL(3,transpose2D[2][0]);
+  TEST_ASSERT_EQUAL(4,transpose2D[0][1]);
+  TEST_ASSERT_EQUAL(5,transpose2D[1][1]);
+  TEST_ASSERT_EQUAL(6,transpose2D[2][1]);
+  TEST_ASSERT_EQUAL(7,transpose2D[0][2]);
+  TEST_ASSERT_EQUAL(8,transpose2D[1][2]);
+  TEST_ASSERT_EQUAL(9,transpose2D[2][2]);
+}
+
+void test_2D_IDCT_with_2D_array_should_get_back_the_origin_value(){
+  int size = 3;
+  float transVal[3][3] = {{5.999824,-2.449120,0},{-0,0,0},{-0,0,0}};
+  float invTransVal[size][size];
+  // 2d_Array[r][c]
+  twoD_IDCT(size, transVal,invTransVal);
+  
+  // TEST_ASSERT_EQUAL(1,invTransVal[0][0]);
+  // TEST_ASSERT_EQUAL(1,invTransVal[1][0]);
+  // TEST_ASSERT_EQUAL(1,invTransVal[2][0]);
+  // TEST_ASSERT_EQUAL(2,invTransVal[0][1]);
+  // TEST_ASSERT_EQUAL(2,invTransVal[1][1]);
+  // TEST_ASSERT_EQUAL(2,invTransVal[2][1]);
+  // TEST_ASSERT_EQUAL(2,invTransVal[0][2]);
+  // TEST_ASSERT_EQUAL(2,invTransVal[1][2]);
+  // TEST_ASSERT_EQUAL(2,invTransVal[2][2]);
+}
+
+
+
+
+
+
+
+
 
 

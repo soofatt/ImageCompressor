@@ -19,6 +19,21 @@ void round_float(float invTransVal[], int noOfELement){
   }
 }
 
+int square_root(int val){
+  int ans;
+  ans = sqrt(val);
+  return ans;
+}
+
+void transpose_2D(int size,float matrix[][size], float transposeMatrix[][size]){
+  int row, col;
+  for(row = 0; row<size; row++){
+    for(col = 0; col<size; col++){
+      transposeMatrix[col][row] = matrix[row][col];
+    }
+  }
+}
+
 void oneD_IDCT(float transVal[], float invTransVal[], int noOfElement){
   int i, num, den, index;
   float Cu, cosAns, divAns, total = 0;
@@ -42,5 +57,15 @@ void oneD_IDCT(float transVal[], float invTransVal[], int noOfElement){
     // printf("Round off Total %d : %f\n",index,round(total));
     invTransVal[index] = total;
     total = 0;
+  }
+}
+
+void twoD_IDCT(int size,float transVal[][size],float invTransVal[][size]){
+  int row, column;
+  
+  for(column = 0; column < size; column++){
+    for(row = 0; row < size; row++){
+      printf("%f  ",transVal[row][column]);
+    }
   }
 }
