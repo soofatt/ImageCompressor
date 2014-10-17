@@ -10,6 +10,18 @@
 
 #include "IDCT.h"
 #include <math.h>
+
+/*  Function    : dumpMatrix, printing square matrix
+ *  
+ *  Arguments
+ *  ---------------
+ *  size          : no of elements in a row or column
+ *  matrix[][size]: Input square matrix
+ *
+ *  Return
+ *  -------------
+ *  NONE
+ */
 void dumpMatrix(int size,float matrix[][size]){
 	int i, j;
 	for(i = 0; i < size; i++){
@@ -19,6 +31,7 @@ void dumpMatrix(int size,float matrix[][size]){
 		printf("\n");
 	}
 }
+
 /*  Function    : cos_IDCT, cosine fractional value in term of PI
  *  
  *  Arguments
@@ -105,7 +118,7 @@ void transpose_2D(int size,float matrix[][size]){
   }
 }
 
-/*  Function    : oneD_IDCT, perform inverse discrete cosine transform to 1D array and get back the original value
+/*  Function    : oneD_IDCT_row, perform inverse discrete cosine transform to 1 row of 1D array and get back the original value
  *  
  *  Arguments
  *  -------------
@@ -116,7 +129,7 @@ void transpose_2D(int size,float matrix[][size]){
  *  -------------
  *  NONE
  */
-void oneD_IDCT(float transVal[], int noOfElement){
+void oneD_IDCT_row(float transVal[], int noOfElement){
   int i, num, den, index;
   float Cu, cosAns, divAns, total = 0;
   float invTransVal[noOfElement];
@@ -146,7 +159,74 @@ void oneD_IDCT(float transVal[], int noOfElement){
   }
 }
 
-/*  Function    : twoD_IDCT, perform inverse discrete cosine transform to 2D array and get back the original value
+/*  Function    : oneD_IDCT_column, perform inverse discrete cosine transform to 1 column of 2D array and get back the original value
+ *  
+ *  Arguments
+ *  -------------
+ *  transVal[][size]: 1D array with elements that need to be IDCT
+ *  size            : Total elements for row/coloum inside the transVal[][]
+ *  column          : specific column for 2D array to be inverse transform
+ *
+ *  Return
+ *  -------------
+ *  NONE
+ */
+void oneD_IDCT_column(int size, float transVal[][size], int column){
+  int i, num, den, index;
+  float Cu, cosAns, divAns, total = 0;
+  float invTransVal[size][size];
+  
+  for(index = 0;index < size; index++){
+    for(i = 0; i < size; i++){
+      if(i == 0){
+        divAns = int_Divider(1,size);
+        Cu = sqrt(divAns);
+      }
+      else{
+        divAns = int_Divider(2,size);
+        Cu = sqrt(divAns);
+      }
+      num = (2*index + 1)*i;
+      den = 2*size;
+      cosAns = cos_IDCT(num,den);
+      total += Cu * transVal[i][column] * cosAns;
+    }
+    invTransVal[index][column] = total;
+    total = 0;
+  }
+  for(i = 0; i < size; i ++){
+    transVal[i][column] = invTransVal[i][column];
+  }
+}
+
+
+/*  Function    : twoD_IDCT_with_transpose, perform 2 inverse discrete cosine transform for row to 2D array and get back the original value
+ *  
+ *  Arguments
+ *  -------------
+ *  transVal[][size]  : 2D array with elements that need to be IDCT
+ *  size              : Total elements inside the transVal[] for row/column
+ *
+ *  Return
+ *  -------------
+ *  NONE
+ */
+void twoD_IDCT_with_transpose(int size,float transVal[][size]){
+  int row, column;
+  int loop;
+  
+  for(loop = 0; loop<2; loop++){
+    transpose_2D(size,transVal);  
+    for(row = 0;row < size; row++){
+      oneD_IDCT_row(transVal[row],size);
+    }
+  }
+  for(row = 0;row < size; row++){
+    round_float(transVal[row],size);
+  }
+}
+
+/*  Function    : twoD_IDCT, perform inverse discrete cosine transform for row and column to 2D array and get back the original value
  *  
  *  Arguments
  *  -------------
@@ -159,16 +239,15 @@ void oneD_IDCT(float transVal[], int noOfElement){
  */
 void twoD_IDCT(int size,float transVal[][size]){
   int row, column;
-  int loop;
   
   /*  To do DCT of 2D array, must perform 1D DCT to each row first follow by each column.
    *  For IDCT, will start from 1D IDCT for each column first then follow by each row.
    */
-  for(loop = 0; loop<2; loop++){
-    transpose_2D(size,transVal);  
-    for(row = 0;row < size; row++){
-      oneD_IDCT(transVal[row],size);
-    }
+  for(column = 0; column < size; column++){
+    oneD_IDCT_column(size,transVal,column);
+  }
+  for(row = 0;row < size; row++){
+    oneD_IDCT_row(transVal[row],size);
   }
   for(row = 0;row < size; row++){
     round_float(transVal[row],size);

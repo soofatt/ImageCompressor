@@ -59,10 +59,10 @@ void test_int_division_to_divide_1_by_3_should_return_0_dot_333(){
   TEST_ASSERT_FLOAT_WITHIN(0.001,0.333,divideAns);
 }
 
-void test_oneD_IDCT_with_a_transform_array_should_return_1_2_3(){
+void test_oneD_IDCT_row_with_a_transform_array_should_return_1_2_3(){
   float transVal[] = {3.464, -1.414, 0};
   
-  oneD_IDCT(transVal,3);
+  oneD_IDCT_row(transVal,3);
   round_float(transVal, 3);
   
   TEST_ASSERT_EQUAL(1,transVal[0]);
@@ -90,7 +90,7 @@ void test_2D_IDCT_with_2D_array_should_get_back_the_origin_value(){
   int size = 3;
   float transVal[3][3] = {{5.999824,-2.449120,0},{-0,0,0},{-0,0,0}};
   // 2d_Array[r][c]
-  twoD_IDCT(size, transVal);
+  twoD_IDCT_with_transpose(size, transVal);
   
   TEST_ASSERT_EQUAL(1,transVal[0][0]);
   TEST_ASSERT_EQUAL(1,transVal[1][0]);
@@ -103,7 +103,34 @@ void test_2D_IDCT_with_2D_array_should_get_back_the_origin_value(){
   TEST_ASSERT_EQUAL(3,transVal[2][2]);
 }
 
+void test_oneD_IDCT_column_with_2D_array_of_3_elements_in_row_and_column_should_inverse_transform_for_first_column_only(){
+  float imageMatrix[3][3] = {{3.464, -1.414, 0}, {-1.414, -1.414, 0}, {0, -1.414, 0}};
+  int size = 3;
+  int col = 0;
+  
+  oneD_IDCT_column(size,imageMatrix,col);
 
+  TEST_ASSERT_FLOAT_WITHIN(0.001,1.000,imageMatrix[0][0]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001,1.999,imageMatrix[1][0]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001,2.999,imageMatrix[2][0]);
+}
+
+void test_2D_IDCT_with_2D_array_should_get_back_the_origin_value2(){
+  int size = 3;
+  float transVal[3][3] = {{5.999824,-2.449120,0},{-0,0,0},{-0,0,0}};
+  // 2d_Array[r][c]
+  twoD_IDCT(size, transVal);
+  
+  TEST_ASSERT_EQUAL(1,transVal[0][0]);
+  TEST_ASSERT_EQUAL(1,transVal[1][0]);
+  TEST_ASSERT_EQUAL(1,transVal[2][0]);
+  TEST_ASSERT_EQUAL(2,transVal[0][1]);
+  TEST_ASSERT_EQUAL(2,transVal[1][1]);
+  TEST_ASSERT_EQUAL(2,transVal[2][1]);
+  TEST_ASSERT_EQUAL(3,transVal[0][2]);
+  TEST_ASSERT_EQUAL(3,transVal[1][2]);
+  TEST_ASSERT_EQUAL(3,transVal[2][2]);
+}
 
 
 

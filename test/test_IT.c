@@ -17,7 +17,7 @@ void test_DCT_transform_array_of_3_elements_and_should_invert_back_to_original_b
   TEST_ASSERT_FLOAT_WITHIN(0.001, -1.414, imageMatrix[1]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2]);
   
-  oneD_IDCT(imageMatrix, 3);
+  oneD_IDCT_row(imageMatrix, 3);
   round_float(imageMatrix, 3);
   
   TEST_ASSERT_EQUAL(1,imageMatrix[0]);
@@ -39,7 +39,7 @@ void test_DCT_transform_array_of_8_elements_and_should_invert_back_to_original_b
   TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[6]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, -0.050, imageMatrix[7]);
   
-  oneD_IDCT(imageMatrix, 8);
+  oneD_IDCT_row(imageMatrix, 8);
   round_float(imageMatrix, 8);
   
   TEST_ASSERT_EQUAL(1,imageMatrix[0]);
@@ -68,7 +68,7 @@ void test_two_D_DCT_transform_array_of_3_elements_and_should_invert_back_to_orig
   TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][1]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][2]);
   
-  twoD_IDCT(size, imageMatrix);
+  twoD_IDCT_with_transpose(size, imageMatrix);
   
   TEST_ASSERT_EQUAL(1,imageMatrix[0][0]);
   TEST_ASSERT_EQUAL(1,imageMatrix[1][0]);
@@ -99,7 +99,7 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][1]);
   // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][2]);
   
-  twoD_IDCT(size, imageMatrix);
+  twoD_IDCT_with_transpose(size, imageMatrix);
   
   TEST_ASSERT_EQUAL(1,imageMatrix[0][0]);
   TEST_ASSERT_EQUAL(2,imageMatrix[0][1]);
@@ -122,7 +122,7 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   
   dumpMatrix(size,imageMatrix);
   
-  twoD_IDCT(size, imageMatrix);
+  twoD_IDCT_with_transpose(size, imageMatrix);
   
   dumpMatrix(size,imageMatrix);
   
@@ -150,7 +150,7 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   dumpMatrix(size,imageMatrix);
   printf("\n");
   
-  twoD_IDCT(size, imageMatrix);
+  twoD_IDCT_with_transpose(size, imageMatrix);
   
   denormalizeMatrix(size, imageMatrix);
   
