@@ -28,25 +28,34 @@ float adderFunction(float *imageMatrix, int imageMatrixIndex, int numOfElement){
   return result;
 }
 
-void transpose_2D_DCT(int size,float matrix[][size]){
-  int row, col;
-  float transposeMatrix[size][size];
+void oneD_DCT_column(int size, float imageMatrix[][size], int col){
+  int u, i, j, numOfElement;
+  float coeff = 0, additionTotal = 0;
+  float DCTArray[size][size];
   
-  for(row = 0; row<size; row++){
-    for(col = 0; col<size; col++){
-      transposeMatrix[col][row] = matrix[row][col];
+  numOfElement = size;
+  
+  for(u = 0; u < numOfElement; u++){
+    if(u == 0)
+      coeff = 1/(sqrt(2));
+    else
+      coeff = 1;
+    for(j = 0; j < numOfElement; j++){
+      additionTotal += imageMatrix[j][col] * (cos_DCT(j, u, numOfElement));
     }
+    DCTArray[u][col] = sqrt(2.0/numOfElement) * coeff * additionTotal;
+    additionTotal = 0;
   }
-  for(row = 0; row<size; row++){
-    for(col = 0; col<size; col++){
-      matrix[row][col] = transposeMatrix[row][col];
-    }
+  
+  for(i = 0; i < numOfElement; i++){
+    imageMatrix[i][col] = DCTArray[i][col];
   }
+  
 }
 
-void oneD_DCT(float *imageMatrix, int numOfElement){
-  int u, i;
-  float coeff = 0;
+void oneD_DCT_row(float *imageMatrix, int numOfElement){
+  int u, i, j;
+  float coeff = 0, additionTotal = 0;
   float DCTArray[numOfElement];
   
   for(u = 0; u < numOfElement; u++){
@@ -54,8 +63,11 @@ void oneD_DCT(float *imageMatrix, int numOfElement){
       coeff = 1/(sqrt(2));
     else
       coeff = 1;
-
-    DCTArray[u] = sqrt(2.0/numOfElement) * coeff * adderFunction(imageMatrix, u, numOfElement);
+    for(j = 0; j < numOfElement; j++){
+      additionTotal += imageMatrix[j] * (cos_DCT(j, u, numOfElement));
+    }
+    DCTArray[u] = sqrt(2.0/numOfElement) * coeff * additionTotal;
+    additionTotal = 0;
   }
   
   for(i = 0; i < numOfElement; i++){
@@ -65,12 +77,13 @@ void oneD_DCT(float *imageMatrix, int numOfElement){
 }
 
 void twoD_DCT(int size, float imageMatrix[][size]){
-  int i, row;
+  int i, row, col;
   
-  for(i = 0; i < 2; i++){
-    for(row = 0; row < size; row++){
-      oneD_DCT(imageMatrix[row], size);
-    }
-    transpose_2D_DCT(size, imageMatrix);
+  for(row = 0; row < size; row++){
+    oneD_DCT_row(imageMatrix[row], size);
+  }
+
+  for(col = 0; col < size; col++){
+    oneD_DCT_column(size, imageMatrix, col);
   }
 }

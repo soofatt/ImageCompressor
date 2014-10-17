@@ -11,7 +11,7 @@ void tearDown(void){}
 void test_DCT_transform_array_of_3_elements_and_should_invert_back_to_original_by_IDCT(){
   float imageMatrix[3] = {1, 2, 3};
   
-  oneD_DCT(imageMatrix, sizeof(imageMatrix)/sizeof(float));
+  oneD_DCT_row(imageMatrix, sizeof(imageMatrix)/sizeof(float));
   
   TEST_ASSERT_FLOAT_WITHIN(0.001, 3.464, imageMatrix[0]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, -1.414, imageMatrix[1]);
@@ -28,7 +28,7 @@ void test_DCT_transform_array_of_3_elements_and_should_invert_back_to_original_b
 void test_DCT_transform_array_of_8_elements_and_should_invert_back_to_original_by_IDCT(){
   float imageMatrix[8] = {1,2,3,4,5,6,7,8};
 
-  oneD_DCT(imageMatrix, sizeof(imageMatrix)/sizeof(float));
+  oneD_DCT_row(imageMatrix, sizeof(imageMatrix)/sizeof(float));
   
   TEST_ASSERT_FLOAT_WITHIN(0.001, 12.727, imageMatrix[0]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, -6.442, imageMatrix[1]);
@@ -88,16 +88,6 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   int size = 8;
   int i, j;
   twoD_DCT(size, imageMatrix);
-  
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 5.999, imageMatrix[0][0]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, -2.449, imageMatrix[0][1]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[0][2]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[1][0]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[1][1]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[1][2]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][0]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][1]);
-  // TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][2]);
   
   twoD_IDCT(size, imageMatrix);
   

@@ -55,16 +55,29 @@ void test_adderFunction_case2(){
   TEST_ASSERT_FLOAT_WITHIN(0.001, 0, result);
 }
 
-void test_oneD_DCT_with_3_elements(){
+void test_oneD_DCT_with_3_elements_on_row(){
   float imageMatrix[3] = {1, 2, 3};
   
   int numOfElem = sizeof(imageMatrix)/sizeof(float);
   
-  oneD_DCT(imageMatrix, numOfElem);
+  oneD_DCT_row(imageMatrix, numOfElem);
   
   TEST_ASSERT_FLOAT_WITHIN(0.001, 3.464, imageMatrix[0]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, -1.414, imageMatrix[1]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2]);
+}
+
+void test_oneD_DCT_with_3_elements_on_column(){
+  int col = 0, size = 3;
+  float imageMatrix[3][3] = {{1,0,0}, {2,0,0}, {3,0,0}};
+  
+  int numOfElem = sizeof(imageMatrix)/sizeof(float);
+  
+  oneD_DCT_column(size, imageMatrix, col);
+  
+  TEST_ASSERT_FLOAT_WITHIN(0.001, 3.464, imageMatrix[0][0]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, -1.414, imageMatrix[1][0]);
+  TEST_ASSERT_FLOAT_WITHIN(0.001, 0, imageMatrix[2][0]);
 }
 
 void test_oneD_DCT_with_8_elements(){
@@ -72,7 +85,7 @@ void test_oneD_DCT_with_8_elements(){
   
   int numOfElem = sizeof(imageMatrix)/sizeof(float);
   
-  oneD_DCT(imageMatrix, numOfElem);
+  oneD_DCT_row(imageMatrix, numOfElem);
   
   TEST_ASSERT_FLOAT_WITHIN(0.001, 12.727, imageMatrix[0]);
   TEST_ASSERT_FLOAT_WITHIN(0.001, 6.442, imageMatrix[1]);
