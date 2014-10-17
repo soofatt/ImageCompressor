@@ -1,4 +1,5 @@
 #include "DCT.h"
+#include "IDCT.h"
 #include <stdio.h>
 #include <math.h>
 

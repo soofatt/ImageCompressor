@@ -6,6 +6,7 @@
 
 #define PI 3.14159265
 
+void dumpMatrix(int size,float matrix[][size]);
 float cos_IDCT(int numerator, int denominator);
 float int_Divider(int numerator, int denominator);
 void round_float(float array[], int noOfELement);
