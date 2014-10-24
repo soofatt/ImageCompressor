@@ -27,4 +27,21 @@ void quantizationFunction(int size, float inputMatrix[][size]){
       inputMatrix[row][col] = quantizedMatrix[row][col];
     }
   }
-}                                        
+}       
+
+void dequantizationFunction(int size, float inputMatrix[][size]){
+  int dequantizedMatrix[size][size];
+  int row, col;
+  
+  for(row = 0; row < size; row++){
+    for(col = 0; col < size; col++){
+      dequantizedMatrix[row][col] = inputMatrix[row][col] * quantizationMatrix50[row][col];
+    }
+  }
+  
+  for(row = 0; row < size; row++){
+    for(col = 0; col < size; col++){
+      inputMatrix[row][col] = dequantizedMatrix[row][col];
+    }
+  }
+}

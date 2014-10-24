@@ -6,7 +6,7 @@ void setUp(void){}
 
 void tearDown(void){}
 
-void test_module_generator_needs_to_be_implemented(void){
+void test_quantizationFunction_given_8by8_matrix_should_output_quantized_matrix(void){
 	int size = 8;
   float inputMatrix[8][8] = {{162.250, 40.599, 20.003, 72.329, 30.250, 12.485, -19.650, -11.497},
                              {30.479, 108.416, 10.473, 32.293, 27.699, -15.505, 18.408, -1.996},
@@ -19,7 +19,39 @@ void test_module_generator_needs_to_be_implemented(void){
                              
   quantizationFunction(size, inputMatrix);
   
-  dumpMatrix(size, inputMatrix);
+  // dumpMatrix(size, inputMatrix);
   
   TEST_ASSERT_EQUAL(10, inputMatrix[0][0]);
+  TEST_ASSERT_EQUAL(4, inputMatrix[0][1]);
+  TEST_ASSERT_EQUAL(2, inputMatrix[0][2]);
+  TEST_ASSERT_EQUAL(5, inputMatrix[0][3]);
+  TEST_ASSERT_EQUAL(1, inputMatrix[0][4]);
+  TEST_ASSERT_EQUAL(0, inputMatrix[0][5]);
+  TEST_ASSERT_EQUAL(0, inputMatrix[0][6]);
+  TEST_ASSERT_EQUAL(0, inputMatrix[0][7]);
+}
+
+void test_dequantizationFunction_given_8by8_matrix_should_output_original_matrix_with_data_loss(){
+	int size = 8;
+  float inputMatrix[8][8] = {{10, 4, 2, 5, 1, 0, 0, 0},
+                             {3, 9, 1, 2, 1, 0, 0, 0},
+                             {-7, -5, 1, -2, -1, 0, 0, 0},
+                             {-3, -5, 0, -1, 0, 0, 0, 0},
+                             {-2, 1, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0}};
+                             
+  dequantizationFunction(size, inputMatrix);
+  
+  dumpMatrix(size, inputMatrix);
+
+  TEST_ASSERT_EQUAL(160, inputMatrix[0][0]);
+  TEST_ASSERT_EQUAL(44, inputMatrix[0][1]);
+  TEST_ASSERT_EQUAL(20, inputMatrix[0][2]);
+  TEST_ASSERT_EQUAL(80, inputMatrix[0][3]);
+  TEST_ASSERT_EQUAL(24, inputMatrix[0][4]);
+  TEST_ASSERT_EQUAL(0, inputMatrix[0][5]);
+  TEST_ASSERT_EQUAL(0, inputMatrix[0][6]);
+  TEST_ASSERT_EQUAL(0, inputMatrix[0][7]);
 }
