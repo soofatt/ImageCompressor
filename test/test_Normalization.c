@@ -1,6 +1,6 @@
 #include "unity.h"
 #include "Normalization.h"
-#include "IDCT.h"
+#include "Common.h"
 
 void setUp(void){}
 
@@ -12,7 +12,7 @@ void test_normalizeMatrix_given_3by3_matrix_should_subtract_128(void){
   
   normalizeMatrix(size, inputMatrix);
   
-  dumpMatrix(size, inputMatrix);
+  // dumpMatrix(size, inputMatrix);
   
   TEST_ASSERT_EQUAL(-103, inputMatrix[0][0]);
   TEST_ASSERT_EQUAL(-42, inputMatrix[0][1]);
@@ -31,7 +31,7 @@ void test_denormalizeMatrix_given_3by3_matrix_should_subtract_128(void){
   
   denormalizeMatrix(size, inputMatrix);
   
-  dumpMatrix(size, inputMatrix);
+  // dumpMatrix(size, inputMatrix);
   
   TEST_ASSERT_EQUAL(25, inputMatrix[0][0]);
   TEST_ASSERT_EQUAL(86, inputMatrix[0][1]);

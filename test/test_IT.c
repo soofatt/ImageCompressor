@@ -1,4 +1,5 @@
 #include "unity.h"
+#include "Common.h"
 #include "DCT.h"
 #include "IDCT.h"
 #include "Normalization.h"
@@ -110,11 +111,11 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   
   twoD_DCT(size, imageMatrix);
   
-  dumpMatrix(size,imageMatrix);
+  // dumpMatrix(size,imageMatrix);
   
   twoD_IDCT(size, imageMatrix);
   
-  dumpMatrix(size,imageMatrix);
+  // dumpMatrix(size,imageMatrix);
   
   TEST_ASSERT_EQUAL(10,imageMatrix[0][0]);
   TEST_ASSERT_EQUAL(22,imageMatrix[0][1]);
@@ -137,14 +138,14 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   
   twoD_DCT(size, imageMatrix);
   
-  dumpMatrix(size,imageMatrix);
-  printf("\n");
+  // dumpMatrix(size,imageMatrix);
+  // printf("\n");
   
   twoD_IDCT(size, imageMatrix);
   
   denormalizeMatrix(size, imageMatrix);
   
-  dumpMatrix(size,imageMatrix);
+  // dumpMatrix(size,imageMatrix);
   
   TEST_ASSERT_EQUAL(154,imageMatrix[0][0]);
   TEST_ASSERT_EQUAL(123,imageMatrix[0][1]);
