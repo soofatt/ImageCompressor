@@ -44,7 +44,7 @@ void test_dequantizationFunction_given_8by8_matrix_should_output_original_matrix
                              
   dequantizationFunction(size, inputMatrix);
   
-  dumpMatrix(size, inputMatrix);
+  // dumpMatrix(size, inputMatrix);
 
   TEST_ASSERT_EQUAL(160, inputMatrix[0][0]);
   TEST_ASSERT_EQUAL(44, inputMatrix[0][1]);

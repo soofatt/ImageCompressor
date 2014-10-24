@@ -3,6 +3,8 @@
 #include "DCT.h"
 #include "IDCT.h"
 #include "Normalization.h"
+#include "Stream.h"
+#include "ArrayIO.h"
 
 
 void setUp(void){}
@@ -157,4 +159,53 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   TEST_ASSERT_EQUAL(136,imageMatrix[0][7]);
 }
 
-
+void test_release1_given_file_should_output_DCTed_matrix_into_output_file(){
+  CEXCEPTION_T error;
+  Stream *inStream = NULL;
+  Stream *outStream = NULL;
+  float inputMatrix[8][8];
+  int size = 8, count = 0;
+  
+  Try{
+    inStream = openStream("test/Data/Water lilies.7z.010", "rb");
+    outStream = openStream("test/Data/Water lilies_RE1.7z.010", "wb");
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
+  }
+  
+  while(count < 100){
+    insertIntoArray(inStream, size, inputMatrix);
+    
+    normalizeMatrix(size, inputMatrix);
+    twoD_DCT(size, inputMatrix);
+    
+    outputToFile(outStream, size, inputMatrix);
+    
+    count++;
+  }
+  closeStream(inStream);
+  closeStream(outStream);
+  
+  Stream *inStream2 = NULL;
+  Stream *outStream2 = NULL;
+  count = 0;
+  
+  Try{
+    inStream2 = openStream("test/Data/Water lilies_RE1.7z.010", "rb");
+    outStream2 = openStream("test/Data/Water lilies_RE1Out.7z.010", "wb");
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
+  }
+  while(count < 100){
+    insertIntoArray(inStream2, size, inputMatrix);
+    
+    twoD_IDCT(size, inputMatrix);
+    denormalizeMatrix(size, inputMatrix);
+    
+    outputToFile(outStream2, size, inputMatrix);
+    
+    count++;
+  }
+  closeStream(inStream2);
+  closeStream(outStream2);
+}
