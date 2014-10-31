@@ -8,7 +8,7 @@ void setUp(void){}
 
 void tearDown(void){}
 
-void test_insertIntoArray_given_64bytes_should_insert_into_8by8_matrix(void){
+void test_readBlock_given_64bytes_should_insert_into_8by8_matrix(void){
 	CEXCEPTION_T error;
   Stream *fileStream = NULL;
   float inputMatrix[8][8];
@@ -20,7 +20,7 @@ void test_insertIntoArray_given_64bytes_should_insert_into_8by8_matrix(void){
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
 
-  insertIntoArray(fileStream, size, inputMatrix);
+  readBlock(fileStream, size, inputMatrix);
   
   TEST_ASSERT_EQUAL_HEX8(0x7F , inputMatrix[0][0]);
   TEST_ASSERT_EQUAL_HEX8(0x90 , inputMatrix[7][7]);
@@ -47,7 +47,7 @@ void test_outputToFile_given_8by8_matrix_should_output_to_64_bytes_in_file(void)
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
 
-  outputToFile(fileStream, size, inputMatrix);
+  writeBlock(fileStream, size, inputMatrix);
   
   closeStream(fileStream);
 }
