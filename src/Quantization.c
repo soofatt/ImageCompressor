@@ -1,5 +1,5 @@
 #include "Quantization.h"
-#include <Math.h>
+#include <math.h>
 
 //Quantization matrix for 50% quality to compression ratio
 const int quantizationMatrix50[8][8] = {{16, 11, 10, 16, 24, 40, 51, 61},
