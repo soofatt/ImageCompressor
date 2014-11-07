@@ -213,8 +213,8 @@ void test_release1_given_file_should_output_close_to_original_file(){
   }Catch(error){
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
-  
-  while(count < 100){
+  Try{
+  while(1){
     readBlock(inStream, size, inputMatrix);
     //printf("%.3f", inputMatrix[0][0]);
     normalizeMatrix(size, inputMatrix);
@@ -224,7 +224,13 @@ void test_release1_given_file_should_output_close_to_original_file(){
     // dumpMatrix(size, inputMatrix);
     writeBlock11Bit(outStream, size, inputMatrix);
     
-    count++;
+   if( feof(inStream->file) )
+      { 
+          break ;
+      }
+  }
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
   closeStream(inStream);
   closeStream(outStream);
@@ -240,7 +246,8 @@ void test_release1_given_file_should_output_close_to_original_file(){
   }Catch(error){
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
-  while(count < 100){
+  Try{
+  while(1){
     readBlock11Bit(inStream2, size, inputMatrixIDCT);
     // dumpMatrixInt(size, inputMatrixIDCT);
     convertToFloat(inputMatrixIDCT, inputMatrix);
@@ -250,12 +257,32 @@ void test_release1_given_file_should_output_close_to_original_file(){
     
     writeBlock(outStream2, size, inputMatrix);
     
-    count++;
+    if( feof(inStream2->file) )
+      { 
+          break ;
+      }
+  }
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
   closeStream(inStream2);
   closeStream(outStream2);
 }
 
+/*
+ *  Raw file                                          DCT output
+ *   -----                                              -----
+ *  |     |  read+chop                         write   |     |
+ *  |     |    ---->   DCT ---->  Quantization  ---->  |     |
+ *  |     |                                            |     |
+ *   -----                                              -----
+ *  DCT output                                           IDCT result
+ *   -----                                                  -----
+ *  |     |  read+chop                             write   |     |
+ *  |     |    ---->  Dequantization  ---->  IDCT   ---->  |     |
+ *  |     |                                                |     |
+ *   -----                                                  -----
+ */
 void test_release2(){
   CEXCEPTION_T error;
   Stream *inStream = NULL;
@@ -269,8 +296,8 @@ void test_release2(){
   }Catch(error){
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
-  
-  while(count < 100){
+  Try{
+  while(1){
     readBlock(inStream, size, inputMatrix);
     //printf("%.3f", inputMatrix[0][0]);
     normalizeMatrix(size, inputMatrix);
@@ -282,7 +309,13 @@ void test_release2(){
     // dumpMatrix(size, inputMatrix);
     writeBlock11Bit(outStream, size, inputMatrix);
     
-    count++;
+    if( feof(inStream->file) )
+      { 
+          break ;
+      }
+  }
+  }Catch(error){
+  TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
   closeStream(inStream);
   closeStream(outStream);
@@ -298,7 +331,8 @@ void test_release2(){
   }Catch(error){
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
-  while(count < 100){
+  Try{
+  while(1){
     readBlock11Bit(inStream2, size, inputMatrixIDCT);
     // dumpMatrixInt(size, inputMatrixIDCT);
     convertToFloat(inputMatrixIDCT, inputMatrix);
@@ -310,7 +344,13 @@ void test_release2(){
     
     writeBlock(outStream2, size, inputMatrix);
     
-    count++;
+   if( feof(inStream2->file) )
+      { 
+          break ;
+      }
+  }
+  }Catch(error){
+  TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
   closeStream(inStream2);
   closeStream(outStream2);
