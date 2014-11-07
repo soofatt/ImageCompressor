@@ -279,14 +279,14 @@ void test_release2(){
     // printf("%.3f", inputMatrix[0][0]);
     // dumpMatrix(size, inputMatrix);
     quantizationFunction50(size, inputMatrix);
-    dumpMatrix(size, inputMatrix);
+    // dumpMatrix(size, inputMatrix);
     writeBlock11Bit(outStream, size, inputMatrix);
     
     count++;
   }
   closeStream(inStream);
   closeStream(outStream);
-  printf("\n");
+  // printf("\n");
   Stream *inStream2 = NULL;
   Stream *outStream2 = NULL;
   count = 0;
@@ -303,7 +303,7 @@ void test_release2(){
     // dumpMatrixInt(size, inputMatrixIDCT);
     convertToFloat(inputMatrixIDCT, inputMatrix);
     dequantizationFunction50(size, inputMatrix);
-    dumpMatrix(size, inputMatrix);
+    // dumpMatrix(size, inputMatrix);
     twoD_IDCT(size, inputMatrix);
     denormalizeMatrix(size, inputMatrix);
     // dumpMatrix(size, inputMatrix);

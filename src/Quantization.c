@@ -50,7 +50,7 @@ void quantizationFunction(int size, float inputMatrix[][size], const int quantiz
   }
 }       
 
-void dequantizationFunction(int size, float inputMatrix[][size]){
+void dequantizationFunction(int size, float inputMatrix[][size], const int quantizationMatrix[][8]){
   int dequantizedMatrix[size][size];
   int row, col;
   
