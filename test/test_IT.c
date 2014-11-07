@@ -199,14 +199,14 @@ void test_release1_given_file_should_output_DCTed_matrix_into_output_file(){
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
   
-  while(count < 1){
+  while(count < 100){
     readBlock(inStream, size, inputMatrix);
     //printf("%.3f", inputMatrix[0][0]);
     normalizeMatrix(size, inputMatrix);
     twoD_DCT(size, inputMatrix);
     // printf("%.3f", inputMatrix[0][0]);
     // dumpMatrix(size, inputMatrix);
-    writeBlock(outStream, size, inputMatrix);
+    writeBlock11Bit(outStream, size, inputMatrix);
     
     count++;
   }
@@ -216,6 +216,7 @@ void test_release1_given_file_should_output_DCTed_matrix_into_output_file(){
   Stream *inStream2 = NULL;
   Stream *outStream2 = NULL;
   count = 0;
+  short int inputMatrixIDCT[8][8];
   
   Try{
     inStream2 = openStream("test/Data/Water lilies_RE1.7z.010", "rb");
@@ -223,10 +224,10 @@ void test_release1_given_file_should_output_DCTed_matrix_into_output_file(){
   }Catch(error){
     TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
   }
-  while(count < 1){
-    readBlockWithConvert(inStream2, size, inputMatrix);
-    // dumpMatrix(size, inputMatrix);
-    
+  while(count < 100){
+    readBlock11Bit(inStream2, size, inputMatrixIDCT);
+    // dumpMatrixInt(size, inputMatrixIDCT);
+    convertToFloat(inputMatrixIDCT, inputMatrix);
     twoD_IDCT(size, inputMatrix);
     denormalizeMatrix(size, inputMatrix);
     // dumpMatrix(size, inputMatrix);
