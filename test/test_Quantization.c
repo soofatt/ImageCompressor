@@ -12,12 +12,12 @@ void test_quantizationFunction_given_8by8_matrix_should_output_quantized_matrix(
                              {30.479, 108.416, 10.473, 32.293, 27.699, -15.505, 18.408, -1.996},
                              {-94.145, -60.051, 12.298, -43.419, -31.288, -6.067, -3.331, 7.144},
                              {-38.568, -83.358, -5.412, -22.170, -13.520, 15.492, -1.332, 3.535},
-                             {-31.250, 17.934, -5.524, -12.356, 14.250, -5.962, 11.488, -6.024},
+                             {-31.250, 17.934, -5.524, -12.356, 14.250, -5.962, 11.488, -6.024}, 
                              {-0.865, -11.764, 12.776, 0.181, 28.071, 12.573, 8.353, 2.936},
                              {4.630, -2.421, 12.169, 6.561, -18.700, -12.753, 7.702, 12.031},
                              {-9.953, 11.194, 7.812, -16.289, 21.465, 0.022, 5.906, 10.681}};
                              
-  quantizationFunction(size, inputMatrix);
+  quantizationFunction50(size, inputMatrix);
   
   // dumpMatrix(size, inputMatrix);
   
@@ -42,7 +42,7 @@ void test_dequantizationFunction_given_8by8_matrix_should_output_original_matrix
                              {0, 0, 0, 0, 0, 0, 0, 0},
                              {0, 0, 0, 0, 0, 0, 0, 0}};
                              
-  dequantizationFunction(size, inputMatrix);
+  dequantizationFunction50(size, inputMatrix);
   
   // dumpMatrix(size, inputMatrix);
 

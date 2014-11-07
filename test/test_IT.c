@@ -3,6 +3,7 @@
 #include "DCT.h"
 #include "IDCT.h"
 #include "Normalization.h"
+#include "Quantization.h"
 #include "Stream.h"
 #include "ArrayIO.h"
 
@@ -185,7 +186,21 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   TEST_ASSERT_EQUAL_MATRIX(expectMatrix, imageMatrix);
 }
 
-void test_release1_given_file_should_output_DCTed_matrix_into_output_file(){
+/*
+ *  Raw file                       DCT output
+ *   -----                           -----
+ *  |     |  read+chop      write   |     |
+ *  |     |    ---->   DCT   ---->  |     |
+ *  |     |                         |     |
+ *   -----                           -----
+ *  DCT output                     IDCT result
+ *   -----                           -----
+ *  |     |  read+chop      write   |     |
+ *  |     |    ---->  IDCT   ---->  |     |
+ *  |     |                         |     |
+ *   -----                           -----
+ */
+void test_release1_given_file_should_output_close_to_original_file(){
   CEXCEPTION_T error;
   Stream *inStream = NULL;
   Stream *outStream = NULL;
@@ -203,6 +218,7 @@ void test_release1_given_file_should_output_DCTed_matrix_into_output_file(){
     readBlock(inStream, size, inputMatrix);
     //printf("%.3f", inputMatrix[0][0]);
     normalizeMatrix(size, inputMatrix);
+    // dumpMatrix(size, inputMatrix);
     twoD_DCT(size, inputMatrix);
     // printf("%.3f", inputMatrix[0][0]);
     // dumpMatrix(size, inputMatrix);
@@ -228,6 +244,66 @@ void test_release1_given_file_should_output_DCTed_matrix_into_output_file(){
     readBlock11Bit(inStream2, size, inputMatrixIDCT);
     // dumpMatrixInt(size, inputMatrixIDCT);
     convertToFloat(inputMatrixIDCT, inputMatrix);
+    twoD_IDCT(size, inputMatrix);
+    denormalizeMatrix(size, inputMatrix);
+    // dumpMatrix(size, inputMatrix);
+    
+    writeBlock(outStream2, size, inputMatrix);
+    
+    count++;
+  }
+  closeStream(inStream2);
+  closeStream(outStream2);
+}
+
+void test_release2(){
+  CEXCEPTION_T error;
+  Stream *inStream = NULL;
+  Stream *outStream = NULL;
+  float inputMatrix[8][8];
+  int size = 8, count = 0;
+  
+  Try{
+    inStream = openStream("test/Data/Water lilies.7z.010", "rb");
+    outStream = openStream("test/Data/Water lilies_RE2.7z.010", "wb");
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
+  }
+  
+  while(count < 100){
+    readBlock(inStream, size, inputMatrix);
+    //printf("%.3f", inputMatrix[0][0]);
+    normalizeMatrix(size, inputMatrix);
+    // dumpMatrix(size, inputMatrix);
+    twoD_DCT(size, inputMatrix);
+    // printf("%.3f", inputMatrix[0][0]);
+    // dumpMatrix(size, inputMatrix);
+    quantizationFunction50(size, inputMatrix);
+    dumpMatrix(size, inputMatrix);
+    writeBlock11Bit(outStream, size, inputMatrix);
+    
+    count++;
+  }
+  closeStream(inStream);
+  closeStream(outStream);
+  printf("\n");
+  Stream *inStream2 = NULL;
+  Stream *outStream2 = NULL;
+  count = 0;
+  short int inputMatrixIDCT[8][8];
+  
+  Try{
+    inStream2 = openStream("test/Data/Water lilies_RE2.7z.010", "rb");
+    outStream2 = openStream("test/Data/Water lilies_RE2Out.7z.010", "wb");
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_END_OF_FILE, error);
+  }
+  while(count < 100){
+    readBlock11Bit(inStream2, size, inputMatrixIDCT);
+    // dumpMatrixInt(size, inputMatrixIDCT);
+    convertToFloat(inputMatrixIDCT, inputMatrix);
+    dequantizationFunction50(size, inputMatrix);
+    dumpMatrix(size, inputMatrix);
     twoD_IDCT(size, inputMatrix);
     denormalizeMatrix(size, inputMatrix);
     // dumpMatrix(size, inputMatrix);

@@ -10,7 +10,7 @@ const int quantizationMatrix50[8][8] = {{16, 11, 10, 16, 24, 40, 51, 61},
                                         {24, 35, 55, 64, 81, 104, 113, 92},
                                         {49, 64, 78, 87, 103, 121, 120, 101},
                                         {72, 92, 95, 98, 112, 100, 103, 99}};
-
+                                        
 //Quantization matrix for 90% quality to compression ratio                                        
 const int quantizationMatrix90[8][8] = {{3, 2, 2, 3, 5, 8, 10, 12},
                                         {2, 2, 3, 4, 5, 12, 12, 11},
@@ -30,15 +30,15 @@ const int quantizationMatrix10[8][8] = {{80, 60, 50, 80, 120, 200, 255, 255},
                                         {120, 175, 255, 255, 255,255, 255, 255},
                                         {245, 255, 255, 255, 255, 255, 255, 255},
                                         {255, 255, 255, 255, 255, 255, 255, 255}};
-                                        
-void quantizationFunction(int size, float inputMatrix[][size]){
+        
+void quantizationFunction(int size, float inputMatrix[][size], const int quantizationMatrix[][8]){
   int quantizedMatrix[size][size];
   int row, col;
   float result;
   
   for(row = 0; row < size; row++){
     for(col = 0; col < size; col++){
-      result = inputMatrix[row][col] / quantizationMatrix50[row][col];
+      result = inputMatrix[row][col] / quantizationMatrix[row][col];
       quantizedMatrix[row][col] = (int)round(result);
     }
   }
