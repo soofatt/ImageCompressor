@@ -18,10 +18,14 @@
 
 #define dequantizationFunction10(size, inputMatrix) \
         dequantizationFunction(size, inputMatrix, quantizationMatrix10)
+
+#define quantizationFunctionChrominance(size, inputMatrix) \
+        quantizationFunction(size, inputMatrix, quantizationMatrixChrominance)
         
 extern const int quantizationMatrix50[8][8];
 extern const int quantizationMatrix90[8][8];
 extern const int quantizationMatrix10[8][8];
+extern const int quantizationMatrixChrominance[8][8];
 
 void quantizationFunction(int size, float inputMatrix[][size], const int quantizationMatrix[][8]);
 void dequantizationFunction(int size, float inputMatrix[][size], const int quantizationMatrix[][8]);
