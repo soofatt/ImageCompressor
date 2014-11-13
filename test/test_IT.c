@@ -186,6 +186,34 @@ void test_two_D_DCT_transform_array_of_8_elements_and_should_invert_back_to_orig
   TEST_ASSERT_EQUAL_MATRIX(expectMatrix, imageMatrix);
 }
 
+void test_DCT_and_IDCT_with_quantization_and_dequantization(){
+  float imageMatrix[8][8] = {{139, 144, 149, 153, 155, 155, 155, 155}, 
+                             {144, 151, 153, 156, 159, 156, 156, 156}, 
+                             {150, 155, 160, 163, 158, 156, 156, 156},
+                             {159, 161, 162, 160, 160, 159, 159, 159}, 
+                             {159, 160, 161, 162, 162, 155, 155, 155}, 
+                             {161, 161, 161, 161, 160, 157, 157, 157},
+                             {162, 162, 161, 163, 162, 157, 157, 157}, 
+                             {162, 162, 161, 161, 163, 158, 158, 158}};                       
+  int size = 8;
+  int i, j;
+
+  normalizeMatrix(size, imageMatrix);
+  
+  twoD_DCT(size, imageMatrix);
+  // dumpMatrix(size,imageMatrix);
+  quantizationFunction50(size, imageMatrix);
+  // dumpMatrix(size,imageMatrix);
+  // printf("\n");
+  dequantizationFunction50(size, imageMatrix);
+  // dumpMatrix(size,imageMatrix);
+  twoD_IDCT(size, imageMatrix);
+  // dumpMatrix(size,imageMatrix);
+  denormalizeMatrix(size, imageMatrix);
+  
+  // dumpMatrix(size, imageMatrix);
+}
+
 /*
  *  Raw file                       DCT output
  *   -----                           -----
@@ -337,7 +365,7 @@ void test_release2(){
     // dumpMatrixInt(size, inputMatrixIDCT);
     convertToFloat(inputMatrixIDCT, inputMatrix);
     dequantizationFunction50(size, inputMatrix);
-    // dumpMatrix(size, inputMatrix);
+    //dumpMatrix(size, inputMatrix);
     twoD_IDCT(size, inputMatrix);
     denormalizeMatrix(size, inputMatrix);
     // dumpMatrix(size, inputMatrix);
