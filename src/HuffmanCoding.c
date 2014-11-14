@@ -21,3 +21,16 @@ void runLengthEncoding(int* dataIn, int* dataOut, int size){
 		}
 	}
 }
+
+void runLengthDecoding(int* dataIn, int* dataOut, int size){
+	int i = 0, j = 0, repeatNo = 0;
+	
+	while(i != size){
+		repeatNo = dataIn[i];
+		i += 1;
+		while(repeatNo != 0){
+			dataOut[j] = dataIn[i];
+			j += 1; repeatNo -= 1;
+		}i += 1;
+	}dumpArray(dataOut, 20);
+}

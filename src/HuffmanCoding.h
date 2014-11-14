@@ -3,6 +3,7 @@
 
 void dumpArray(int* data, int size);
 void runLengthEncoding(int* dataIn, int* dataOut, int size);
+void runLengthDecoding(int* dataIn, int* dataOut, int size);
 
 
 #endif // HuffmanCoding_H
