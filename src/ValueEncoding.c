@@ -1,13 +1,24 @@
 #include "ValueEncoding.h"
 
-void valueEncoding(EncodeData *data, char runLength, short int nextSymbol){
+void valueEncoding(EncodeData *data, RunLengthData *input){
   unsigned char category;
+  short int mask = 0x01;
+  int i;
   
-  category = getCategory(nextSymbol);
+  category = getCategory(input->nextSymbol);
   
-  data->runAndCategory = runLength;
+  for(i = 0; i < 15 - category; i++){
+    mask = (mask << 1) + 1;
+  }
+  mask = ~(mask << category);
+  
+  data->runAndCategory = input->run;
   data->runAndCategory = (data->runAndCategory << 4) + category;
-  data->symbol = nextSymbol;
+  
+  if(input->nextSymbol < 0)
+    data->symbol = (input->nextSymbol & mask) - 1;
+  else
+    data->symbol = input->nextSymbol;
 }
 
 void valueDecoding(EncodeData *data, RunLengthData *container){
@@ -26,9 +37,9 @@ void valueDecoding(EncodeData *data, RunLengthData *container){
   mask = mask << category;
   
   if(data->symbol < limit)
-    container->symbol = (data->symbol | mask) + 1;
+    container->nextSymbol = (data->symbol | mask) + 1;
   else
-    container->symbol = data->symbol;
+    container->nextSymbol = data->symbol;
 }
 
 char getCategory(short int symbol){

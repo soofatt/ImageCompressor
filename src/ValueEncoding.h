@@ -10,10 +10,10 @@ struct EncodeData{
 typedef struct RunLengthData RunLengthData;
 struct RunLengthData{
   unsigned char run;
-  short int symbol;
+  short int nextSymbol;
 };
 
-void valueEncoding(EncodeData *data, char runLength, short int nextSymbol);// Parameters to be changed
+void valueEncoding(EncodeData *data, RunLengthData *input);// Parameters to be changed
 void valueDecoding(EncodeData *data, RunLengthData *container);// Parameters to be changed
 char getCategory(short int symbol);
 
