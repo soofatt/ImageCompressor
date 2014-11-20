@@ -21,4 +21,7 @@ void streamWriteByte(Stream *out, char decodeSymbol);
 
 uint32 streamReadBit(Stream *in);
 uint32 streamReadBits(Stream *in, int bitSize); //decide how many bit to read from the file
+
+void writeStuffedByte(Stream *out, unsigned char byte);
+char readStuffedByte(Stream *in);
 #endif
