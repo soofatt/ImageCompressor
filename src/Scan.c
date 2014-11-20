@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include "Scan.h"
 
+	
 #define TransferVal() (out[i] = in[r][c])
+
+void updateRCTable(scanTable* table){
+	table->column += 1;
+}
 
 /* Function	: scanArray
  * Do		: Perform Zig-Zag ordering to 2D array and insert into 1D array

@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "HuffmanCoding.h"
+#include "Scan.h"
 
 void setUp(void){}
 
@@ -96,11 +97,10 @@ void test_runLengthDecoding_to_decode_encode_value_into_original_value_and_seque
 }
 
 void test_runLengthEncoding2(){
-	scanTable table = {0,0};
+	scanTable table = {.row = 0, .column = 0, .firstStage = 0, .secondStage = 0, .thirdStage = 0, .finalStage = 0};
 	int size = 3;
 	int dataOut[18];
 	int dataIn[3][3] = {{0, 0, 1}, {1, 2, 3}, {1, 2, 3}};
-	
 	runLengthEncoding2(size, dataOut, dataIn, &table);
 }
 
