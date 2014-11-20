@@ -95,3 +95,12 @@ void test_runLengthDecoding_to_decode_encode_value_into_original_value_and_seque
 	TEST_ASSERT_EQUAL(2,output[9]);
 }
 
+void test_runLengthEncoding2(){
+	scanTable table = {0,0};
+	int size = 3;
+	int dataOut[18];
+	int dataIn[3][3] = {{0, 0, 1}, {1, 2, 3}, {1, 2, 3}};
+	
+	runLengthEncoding2(size, dataOut, dataIn, &table);
+}
+

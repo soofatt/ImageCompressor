@@ -8,6 +8,29 @@ void dumpArray(int* data, int size){
 	}
 }
 
+//remind me to return the last index for dataOut
+void runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* table){
+	int i = 0, j = 0, zeroCount = 0, limit1D = size*size*2;
+	
+	while(table->column < 3){
+		if(dataIn[table->row][table->column] != 0){
+			if(zeroCount != 0)
+				dataOut[i] = zeroCount;
+			else
+				dataOut[i] = 0; 
+			i += 1; zeroCount = 0;
+			dataOut[i] = dataIn[table->row][table->column]; i += 1;
+		}
+		else
+			zeroCount += 1;
+			
+		//Suppose to call zig zag and update RC
+		table->column += 1;
+		
+	}
+	dumpArray(dataOut,6);
+}
+
 void runLengthEncoding(int* dataIn, int* dataOut, int size){
 	int i = 0, j = 0, sum = 1;
 	
