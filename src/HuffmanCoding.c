@@ -8,16 +8,56 @@ void dumpArray(int* data, int size){
 	}
 }
 
+/* Function	: runLengthEncode
+ * Do		: Return the run and symbol, run is the number of zero before symbol(non-zero)
+ *
+ * Argument
+ * size		: is the row and column of 2D array
+ * dataIn	: pass in 2D array from quantization
+ * state	: contain the state to tell whether the operation to find zero should continue or not
+ *				If 1, continue search for zero. Otherwise, it found non-zero symbol and return
+ *
+ * Return	: 
+ * table[index]	: Concatenate value of row and column
+ */
 uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
-	uint8 row, column, aa = 3, returnRC = 0x11;
-	returnRC = lookupRC(50);
-	column = returnRC & 0x0f;
-	row = returnRC >> 4;
+	uint8 row, column, zeroCount = 0, returnRC = 0x00;
+	uint32 runAndSymbol = 0; uint16 symbol;
+	state->state = 1;
+	while(state->state){
+		//Look for row and column from lookup and store
+		returnRC = lookupRC(state->index);
+		column = returnRC & 0x0f;
+		row = returnRC >> 4;
+		if(dataIn[row][column] == 0){
+			zeroCount += 1; state->index++;
+		}
+		else if(dataIn[row][column] != 0){
+			if(zeroCount == 0){
+				runAndSymbol = dataIn[row][column];
+				state->state = 0;
+			}else{
+				runAndSymbol = zeroCount;
+				runAndSymbol <<= 16;
+				symbol = dataIn[row][column];
+				runAndSymbol |= symbol;
+				state->state = 0;
+			}
+		}
+		if(zeroCount >15){
+			runAndSymbol = 15; runAndSymbol <<= 16;
+			zeroCount = 0; state->state = 0;
+		}
+		if(state->index == 64 && zeroCount != 0){
+			runAndSymbol = 0;
+			state->state = 0;
+		}
+	}
 	printf("%d\n", column);
 	printf("%d\n", row);
-	printf("%d", dataIn[aa][column]);
+	printf("%d\n\n", dataIn[row][column]);
 	
-	return 0;	
+	return runAndSymbol;	
 }
 
 void runLengthEncoding(int* dataIn, int* dataOut, int size){

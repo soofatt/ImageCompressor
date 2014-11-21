@@ -96,8 +96,9 @@ void test_runLengthDecoding_to_decode_encode_value_into_original_value_and_seque
 	TEST_ASSERT_EQUAL(2,output[9]);
 }
 
-void test_runLengthEncoder_should_return(){
-	State progress = {.state = 1, .index = 0};
+void test_runLengthEncoder_should_return_run_0_and_symbol_160_with_index_0(){
+	State progress = {.state = 0, .index = 0};
+	uint32 returnRunAndSymbol;
 	int size = 8;
 	short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
 							{ 36, 108,  14,  38,  26,   0,   0,   0},
@@ -108,8 +109,94 @@ void test_runLengthEncoder_should_return(){
 							{  0,   0,   0,   5,   0,   0,   0,   0},
 							{  1,   0,   0,   0,   0,   0,   0,   1}};
 	
-	runLengthEncode(size, dataIn, &progress);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(160,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(0,progress.index);
+	
 }
+
+void test_runLengthEncoder_should_return_run_0_and_symbol_44_with_index_1(){
+	State progress = {.state = 0, .index = 1};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+							{ 36, 108,  14,  38,  26,   0,   0,   0},
+							{-98, -65,  16, -48, -40,   0,   0,   0},
+							{-42, -85,   0, -29,   0,   0,   0,   0},
+							{-36,  22,   0,   0,   0,   0,   0,   0}, 
+							{  0,   0,   0,   0,   0,   0,   0,   0},
+							{  0,   0,   0,   5,   0,   0,   0,   0},
+							{  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(44,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(1,progress.index);	
+}
+
+void test_runLengthEncoder_should_return_run_4_and_symbol_neg_29_with_index_20(){
+	State progress = {.state = 0, .index = 20};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+							  { 36, 108,  14,  38,  26,   0,   0,   0},
+							  {-98, -65,  16, -48, -40,   0,   0,   0},
+							  {-42, -85,   0, -29,   0,   0,   0,   0},
+							  {-36,  22,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   5,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	//first 16 bits(MSB) is the run(no of zero), second 16 bits(LSB) is the symbol of -29
+	//no of zero is 4 so become 0x0004, -29 is FFE3 in hex
+	TEST_ASSERT_EQUAL(0x0004FFE3,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(24,progress.index);	
+}
+
+void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_47(){
+	State progress = {.state = 0, .index = 47};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+							  { 36, 108,  14,  38,  26,   0,   0,   0},
+							  {-98, -65,  16, -48, -40,   0,   0,   0},
+							  {-42, -85,   0, -29,   0,   0,   0,   0},
+							  {-36,  22,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   5,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	//It has more than 15 zero from index 47 which row and column is 6 and 3
+	//so return run is 15 and symbol is 0;
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(63,progress.index);	
+}
+
+void test_runLengthEncoder_should_return_run_0_and_symbol_0_with_index_63(){
+	State progress = {.state = 0, .index = 63};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+							  { 36, 108,  14,  38,  26,   0,   0,   0},
+							  {-98, -65,  16, -48, -40,   0,   0,   0},
+							  {-42, -85,   0, -29,   0,   0,   0,   0},
+							  {-36,  22,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   5,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   0}};
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	//It check to the end, and there is zero there, but the zeroCount
+	// not exceed 15, so send run = 0 and symbol 0 to represent EOB
+	TEST_ASSERT_EQUAL(0x00000000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(64,progress.index);	
+}
+
 
 /* 
 void test_runLengthEncoding2(){
