@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "HuffmanCoding.h"
+#include "runLengthCoding.h"
 
 void dumpArray(int* data, int size){
 	int i;

@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "HuffmanCoding.h"
+#include "runLengthCoding.h"
 #include "Scan.h"
 #include "dataType.h"
 void setUp(void){}

@@ -1,7 +1,6 @@
 #ifndef Scan_H
 #define Scan_H
 #include "dataType.h"
-// #include "HuffmanCoding.h"
 
 #define IncrementBy1(x) (x+=1)
 #define DecrementBy1(x) (x-=1)

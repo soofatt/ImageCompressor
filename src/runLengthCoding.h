@@ -1,5 +1,5 @@
-#ifndef HuffmanCoding_H
-#define HuffmanCoding_H
+#ifndef runLengthCoding_H
+#define runLengthCoding_H
 #include "Scan.h"
 #include "dataType.h"
 
@@ -17,4 +17,4 @@ uint32 runLengthEncode(int size, short int dataIn[][size], State* state);
 //int runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* table);
 //void runLengthDecoding2(int size, int* dataIn, int dataOut[][size], scanTable* table);
 
-#endif // HuffmanCoding_H
+#endif // runLengthCoding_H
