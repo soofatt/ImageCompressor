@@ -112,7 +112,7 @@ void test_runLengthEncoder_should_return_run_0_and_symbol_160_with_index_0(){
 	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
 	TEST_ASSERT_EQUAL(160,returnRunAndSymbol);
 	TEST_ASSERT_EQUAL(0,progress.state);
-	TEST_ASSERT_EQUAL(0,progress.index);
+	TEST_ASSERT_EQUAL(1,progress.index);
 	
 }
 
@@ -132,7 +132,7 @@ void test_runLengthEncoder_should_return_run_0_and_symbol_44_with_index_1(){
 	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
 	TEST_ASSERT_EQUAL(44,returnRunAndSymbol);
 	TEST_ASSERT_EQUAL(0,progress.state);
-	TEST_ASSERT_EQUAL(1,progress.index);	
+	TEST_ASSERT_EQUAL(2,progress.index);	
 }
 
 void test_runLengthEncoder_should_return_run_4_and_symbol_neg_29_with_index_20(){
@@ -153,7 +153,7 @@ void test_runLengthEncoder_should_return_run_4_and_symbol_neg_29_with_index_20()
 	//no of zero is 4 so become 0x0004, -29 is FFE3 in hex
 	TEST_ASSERT_EQUAL(0x0004FFE3,returnRunAndSymbol);
 	TEST_ASSERT_EQUAL(0,progress.state);
-	TEST_ASSERT_EQUAL(24,progress.index);	
+	TEST_ASSERT_EQUAL(25,progress.index);	
 }
 
 void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_47(){
@@ -238,6 +238,53 @@ void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_45(){
 	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
 	TEST_ASSERT_EQUAL(0,progress.state);
 	TEST_ASSERT_EQUAL(61,progress.index);	
+}
+
+void test_runLengthEncoder_should_do_all_the_2D_array(){
+	State progress = {.state = 0, .index = 0};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{160,  44,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   1,   0},
+							  { 15,   0,   0,   0,   0,   0,   0,   0},
+							  {  0, -85,   0,   0,   0,   0,   0,   0},
+							  {-36,   0,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(160,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(1,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(44,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(2,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x0001000F,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(4,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x0006FFDC,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(11,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x0000FFAB,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(12,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(28,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x00010001,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(30,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x00000000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(64,progress.index);
 }
 
 /* 
