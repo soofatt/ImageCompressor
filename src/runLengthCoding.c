@@ -21,7 +21,7 @@ void dumpArray(int* data, int size){
  * table[index]	: Concatenate value of row and column
  */
 uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
-	uint8 row, column, zeroCount = 0, returnRC = 0x00;
+	uint8 row, column, zeroCount = 0, returnRC = 0x00, keep = 0;
 	uint32 runAndSymbol = 0; uint16 symbol;
 	int tempIndex;
 	state->state = 1;
@@ -46,16 +46,17 @@ uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
 			}
 		}
 		if(zeroCount >15){
-			runAndSymbol = 15; runAndSymbol <<= 16; zeroCount = 0; tempIndex = state->index;
+			runAndSymbol = 15; runAndSymbol <<= 16; zeroCount = 0; 
+			//Make sure next 16 zero will not overwrite tempIndex because
+			//It can be non-zero after 32 zero
+			if(keep == 0){ 
+				tempIndex = state->index; keep = 1;
+			}
 		}
 		if(state->index == 64 && zeroCount != 0){
 			runAndSymbol = 0; state->state = 0;
 		}
 	}
-	printf("%d\n", column);
-	printf("%d\n", row);
-	printf("%d\n\n", dataIn[row][column]);
-	
 	return runAndSymbol;	
 }
 
@@ -83,49 +84,8 @@ void runLengthDecoding(int* dataIn, int* dataOut, int size){
 			dataOut[j] = dataIn[i];
 			j += 1; repeatNo -= 1;
 		}i += 1;
-	}dumpArray(dataOut, 20);
+	}//dumpArray(dataOut, 20);
 }
-/* int runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* table){
-	// int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0;
-	// table->stage = 1;
-	// while(i!=size){
-		// part1 += (i+1);
-		// i++;
-	// }
-	// part2 = (size*size)-part1;
-	// i = 0;
-	// while(j < part1){
-		// if(dataIn[table->row][table->column] != 0){
-			// if(zeroCount != 0)
-				// dataOut[i] = zeroCount;
-			// else
-				// dataOut[i] = 0; 
-			// i += 1; zeroCount = 0;
-			// dataOut[i] = dataIn[table->row][table->column]; i += 1;
-		// }
-		// else
-			// zeroCount += 1;
-		// updateRCTable1(table);
-		// j++;
-	// }
-	// j = 0;
-	// while(j < part2){
-		// updateRCTable2(table);
-		// if(dataIn[table->row][table->column] != 0){
-			// if(zeroCount != 0)
-				// dataOut[i] = zeroCount;
-			// else
-				// dataOut[i] = 0; 
-			// i += 1; zeroCount = 0;
-			// dataOut[i] = dataIn[table->row][table->column]; i += 1;
-		// }
-		// else
-			// zeroCount += 1;
-		// j++;
-	// }
-	// dumpArray(dataOut,i);
-	// return i;
-// }*/
 
 /*	printf("%d %d\n",part1,part2);
 	printf("row : %d column : %d\n", table->row, table->column);
@@ -137,60 +97,105 @@ void runLengthDecoding(int* dataIn, int* dataOut, int size){
 			printf("%d ",dataOut[i][j]);
 		}printf("\n");
 	}
-*/
+	printf("%d\n", column);
+	printf("%d\n", row);
+	printf("%d\n\n", dataIn[row][column]);
 
-/*// void runLengthDecoding2(int size, int* dataIn, int dataOut[][size], scanTable* table){
-	// int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0, check = 1, insert = 0;
-	// table->firstStage = 1;
-	// while(i!=size){
-		// part1 += (i+1);
-		// i++;
-	// }
-	// part2 = (size*size)-part1;
-	// i = 0;	
-	// while(j < part1){
-		// if(zeroCount == 0){
-			// if(check && dataIn[i] != 0){
-				// zeroCount = dataIn[i];
-				// check = 0; insert = 1;
-			// }
-			// else{
-				// i++;
-				// dataOut[table->row][table->column] = dataIn[i]; i++;
-				// check = 1; insert = 0;
-			// }
-		// }
-		// if(zeroCount!=0){
-			// dataOut[table->row][table->column] = 0;
-			// zeroCount--;
-		// }
-		// updateRCTable1(table);
-		// j++;
-	// }j = 0;
-	// while(j < part2){
-		// updateRCTable2(table);
-		// if(zeroCount == 0){
-			// if(check && dataIn[i] != 0){
-				// zeroCount = dataIn[i];
-				// check = 0; insert = 1;
-			// }
-			// else{
-				// i++;
-				// dataOut[table->row][table->column] = dataIn[i]; i++;
-				// check = 1; insert = 0;
-			// }
-		// }
-		// if(zeroCount!=0){
-			// dataOut[table->row][table->column] = 0;
-			// zeroCount--;
-		// }
-		// j++;
-	// }
-	// for(i = 0; i < size; i++){
-		// for(j = 0; j < size; j++){
-			// printf("%d ",dataOut[i][j]);
-		// }printf("\n");
-	// }
-// }*/
+int runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* table){
+	int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0;
+	table->stage = 1;
+	while(i!=size){
+		part1 += (i+1);
+		i++;
+	}
+	part2 = (size*size)-part1;
+	i = 0;
+	while(j < part1){
+		if(dataIn[table->row][table->column] != 0){
+			if(zeroCount != 0)
+				dataOut[i] = zeroCount;
+			else
+				dataOut[i] = 0; 
+			i += 1; zeroCount = 0;
+			dataOut[i] = dataIn[table->row][table->column]; i += 1;
+		}
+		else
+			zeroCount += 1;
+		updateRCTable1(table);
+		j++;
+	}
+	j = 0;
+	while(j < part2){
+		updateRCTable2(table);
+		if(dataIn[table->row][table->column] != 0){
+			if(zeroCount != 0)
+				dataOut[i] = zeroCount;
+			else
+				dataOut[i] = 0; 
+			i += 1; zeroCount = 0;
+			dataOut[i] = dataIn[table->row][table->column]; i += 1;
+		}
+		else
+			zeroCount += 1;
+		j++;
+	}
+	dumpArray(dataOut,i);
+	return i;
+}
+
+
+void runLengthDecoding2(int size, int* dataIn, int dataOut[][size], scanTable* table){
+	int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0, check = 1, insert = 0;
+	table->firstStage = 1;
+	while(i!=size){
+		part1 += (i+1);
+		i++;
+	}
+	part2 = (size*size)-part1;
+	i = 0;	
+	while(j < part1){
+		if(zeroCount == 0){
+			if(check && dataIn[i] != 0){
+				zeroCount = dataIn[i];
+				check = 0; insert = 1;
+			}
+			else{
+				i++;
+				dataOut[table->row][table->column] = dataIn[i]; i++;
+				check = 1; insert = 0;
+			}
+		}
+		if(zeroCount!=0){
+			dataOut[table->row][table->column] = 0;
+			zeroCount--;
+		}
+		updateRCTable1(table);
+		j++;
+	}j = 0;
+	while(j < part2){
+		updateRCTable2(table);
+		if(zeroCount == 0){
+			if(check && dataIn[i] != 0){
+				zeroCount = dataIn[i];
+				check = 0; insert = 1;
+			}
+			else{
+				i++;
+				dataOut[table->row][table->column] = dataIn[i]; i++;
+				check = 1; insert = 0;
+			}
+		}
+		if(zeroCount!=0){
+			dataOut[table->row][table->column] = 0;
+			zeroCount--;
+		}
+		j++;
+	}
+	for(i = 0; i < size; i++){
+		for(j = 0; j < size; j++){
+			printf("%d ",dataOut[i][j]);
+		}printf("\n");
+	}
+}*/
 
 

@@ -287,6 +287,56 @@ void test_runLengthEncoder_should_do_all_the_2D_array(){
 	TEST_ASSERT_EQUAL(64,progress.index);
 }
 
+void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_0_with_array_start_with_15_zero(){
+	State progress = {.state = 0, .index = 0};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   1,   0,   0,   0},
+							  {  0,   0,   0,   1, -40,   0,   0,   0},
+							  {  0,   0,   0, -29,   0,   0,   5,   0},
+							  {  0,  22,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(16,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x00000001,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(17,progress.index);
+}
+
+void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_0_from_array_start_with_35_zero(){
+	State progress = {.state = 0, .index = 0};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   5,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(16,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(32,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x00030001,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(36,progress.index);
+}
+
 /* 
 void test_runLengthEncoding2(){
 	scanTable table = {.row = 0, .column = 0, .col_limit = 2, .stage = 0};
