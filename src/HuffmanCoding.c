@@ -8,7 +8,45 @@ void dumpArray(int* data, int size){
 	}
 }
 
-// int runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* table){
+uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
+	uint8 row, column, aa = 3, returnRC = 0x11;
+	returnRC = lookupRC(50);
+	column = returnRC & 0x0f;
+	row = returnRC >> 4;
+	printf("%d\n", column);
+	printf("%d\n", row);
+	printf("%d", dataIn[aa][column]);
+	
+	return 0;	
+}
+
+void runLengthEncoding(int* dataIn, int* dataOut, int size){
+	int i = 0, j = 0, sum = 1;
+	
+	while(i != size){
+		if(dataIn[i] == dataIn[i+1]){
+			sum += 1; i += 1;
+		}else{
+			dataOut[j] = sum; j += 1;
+			dataOut[j] = dataIn[i];
+			sum = 1; i += 1; j += 1;
+		}
+	}
+}
+
+void runLengthDecoding(int* dataIn, int* dataOut, int size){
+	int i = 0, j = 0, repeatNo = 0;
+	
+	while(i != size){
+		repeatNo = dataIn[i];
+		i += 1;
+		while(repeatNo != 0){
+			dataOut[j] = dataIn[i];
+			j += 1; repeatNo -= 1;
+		}i += 1;
+	}dumpArray(dataOut, 20);
+}
+/* int runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* table){
 	// int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0;
 	// table->stage = 1;
 	// while(i!=size){
@@ -48,7 +86,7 @@ void dumpArray(int* data, int size){
 	// }
 	// dumpArray(dataOut,i);
 	// return i;
-// }
+// }*/
 
 /*	printf("%d %d\n",part1,part2);
 	printf("row : %d column : %d\n", table->row, table->column);
@@ -62,7 +100,7 @@ void dumpArray(int* data, int size){
 	}
 */
 
-// void runLengthDecoding2(int size, int* dataIn, int dataOut[][size], scanTable* table){
+/*// void runLengthDecoding2(int size, int* dataIn, int dataOut[][size], scanTable* table){
 	// int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0, check = 1, insert = 0;
 	// table->firstStage = 1;
 	// while(i!=size){
@@ -114,31 +152,6 @@ void dumpArray(int* data, int size){
 			// printf("%d ",dataOut[i][j]);
 		// }printf("\n");
 	// }
-// }
+// }*/
 
-void runLengthEncoding(int* dataIn, int* dataOut, int size){
-	int i = 0, j = 0, sum = 1;
-	
-	while(i != size){
-		if(dataIn[i] == dataIn[i+1]){
-			sum += 1; i += 1;
-		}else{
-			dataOut[j] = sum; j += 1;
-			dataOut[j] = dataIn[i];
-			sum = 1; i += 1; j += 1;
-		}
-	}
-}
 
-void runLengthDecoding(int* dataIn, int* dataOut, int size){
-	int i = 0, j = 0, repeatNo = 0;
-	
-	while(i != size){
-		repeatNo = dataIn[i];
-		i += 1;
-		while(repeatNo != 0){
-			dataOut[j] = dataIn[i];
-			j += 1; repeatNo -= 1;
-		}i += 1;
-	}dumpArray(dataOut, 20);
-}
