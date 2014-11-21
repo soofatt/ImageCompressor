@@ -23,6 +23,7 @@ void dumpArray(int* data, int size){
 uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
 	uint8 row, column, zeroCount = 0, returnRC = 0x00;
 	uint32 runAndSymbol = 0; uint16 symbol;
+	int tempIndex;
 	state->state = 1;
 	while(state->state){
 		//Look for row and column from lookup and store
@@ -33,20 +34,24 @@ uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
 			zeroCount += 1; state->index++;
 		}
 		else if(dataIn[row][column] != 0){
-			if(zeroCount == 0){
-				runAndSymbol = dataIn[row][column];
+			if(runAndSymbol == 0x000F0000){
+				state->index = tempIndex;
 				state->state = 0;
 			}else{
-				runAndSymbol = zeroCount;
-				runAndSymbol <<= 16;
-				symbol = dataIn[row][column];
-				runAndSymbol |= symbol;
-				state->state = 0;
+				if(zeroCount == 0){
+					runAndSymbol = dataIn[row][column];
+					state->state = 0;
+				}else{
+					runAndSymbol = zeroCount;
+					runAndSymbol <<= 16;
+					symbol = dataIn[row][column];
+					runAndSymbol |= symbol;
+					state->state = 0;
+				}
 			}
 		}
 		if(zeroCount >15){
-			runAndSymbol = 15; runAndSymbol <<= 16;
-			zeroCount = 0; state->state = 0;
+			runAndSymbol = 15; runAndSymbol <<= 16; zeroCount = 0; tempIndex = state->index;
 		}
 		if(state->index == 64 && zeroCount != 0){
 			runAndSymbol = 0;

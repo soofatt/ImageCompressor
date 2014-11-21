@@ -197,6 +197,48 @@ void test_runLengthEncoder_should_return_run_0_and_symbol_0_with_index_63(){
 	TEST_ASSERT_EQUAL(64,progress.index);	
 }
 
+void test_runLengthEncoder_should_return_run_0_and_symbol_0_with_index_47_if_there_are_no_more_non_zero_until_end(){
+	State progress = {.state = 0, .index = 47};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+							  { 36, 108,  14,  38,  26,   0,   0,   0},
+							  {-98, -65,  16, -48, -40,   0,   0,   0},
+							  {-42, -85,   0, -29,   0,   0,   0,   0},
+							  {-36,  22,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   5,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   0}};
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	//It check to the end, and there are no more non zero there, but the zeroCount
+	// exceed 15, so send run = 0 and symbol 0 to represent EOB
+	TEST_ASSERT_EQUAL(0x00000000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(64,progress.index);	
+}
+
+void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_45(){
+	State progress = {.state = 0, .index = 45};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+							  { 36, 108,  14,  38,  26,   0,   0,   0},
+							  {-98, -65,  16, -48, -40,   0,   0,   0},
+							  {-42, -85,   0, -29,   0,   0,   5,   0},
+							  {-36,  22,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	//It has more than 15 zero from index 45 which row and column is 3 and 6
+	//so return run is 15 and symbol is 0, it also return index after 16 0's
+	// Note that the 16th '0' at index 60 which row and column are 5 and 7
+	// So, should start from next index which is 61 at row and column of 6 and 7
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(61,progress.index);	
+}
 
 /* 
 void test_runLengthEncoding2(){
