@@ -34,13 +34,10 @@ uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
 			zeroCount += 1; state->index++;
 		}
 		else if(dataIn[row][column] != 0){
-			printf("data Not zero\n");
 			if(runAndSymbol == 0x000F0000){
 				state->index = tempIndex;
 				state->state = 0;
 			}else{
-				printf("run&sym nothing\n");
-				printf("here\n");
 				runAndSymbol = zeroCount;
 				runAndSymbol <<= 16;
 				symbol = dataIn[row][column];
