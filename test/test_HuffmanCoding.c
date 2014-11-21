@@ -1,7 +1,6 @@
 #include "unity.h"
 #include "HuffmanCoding.h"
 #include "Scan.h"
-
 void setUp(void){}
 
 void tearDown(void){}
@@ -96,27 +95,26 @@ void test_runLengthDecoding_to_decode_encode_value_into_original_value_and_seque
 	TEST_ASSERT_EQUAL(2,output[9]);
 }
 
-void test_runLengthEncoding2(){
-	scanTable table = {.row = 0, .column = 0, .col_limit = 2, .firstStage = 0, .secondStage = 0, .thirdStage = 0, .finalStage = 0};
-	int size = 8;
-	int dataOut[128];
-	int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
-                        { 36, 108,  14,  38,  26,   0,   0,   0},
-                        {-98, -65,  16, -48, -40,   0,   0,   0},
-                        {-42, -85,   0, -29,   0,   0,   0,   0},
-                        {-36,  22,   0,   0,   0,   0,   0,   0}, 
-                        {  0,   0,   0,   0,   0,   0,   0,   0},
-                        {  0,   0,   0,   5,   0,   0,   0,   0},
-                        {  1,   0,   0,   0,   0,   0,   0,   1}};
+// void test_runLengthEncoding2(){
+	// scanTable table = {.row = 0, .column = 0, .col_limit = 2, .stage = 0};
+	// int size = 8;
+	// int dataOut[128];
+	// int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+                        // { 36, 108,  14,  38,  26,   0,   0,   0},
+                        // {-98, -65,  16, -48, -40,   0,   0,   0},
+                        // {-42, -85,   0, -29,   0,   0,   0,   0},
+                        // {-36,  22,   0,   0,   0,   0,   0,   0}, 
+                        // {  0,   0,   0,   0,   0,   0,   0,   0},
+                        // {  0,   0,   0,   5,   0,   0,   0,   0},
+                        // {  1,   0,   0,   0,   0,   0,   0,   1}};
 						
-						//0 1 2 45 2 0 3 2 3
-	runLengthEncoding2(size, dataOut, dataIn, &table);
-}
+	// runLengthEncoding2(size, dataOut, dataIn, &table);
+// }
 
-void test_runLengthDecoding2(){
-	scanTable table = {.row = 0, .column = 0, .col_limit = 2, .firstStage = 0, .secondStage = 0, .thirdStage = 0, .finalStage = 0};
-	int size = 8;
-	int dataIn[24] = {1,2,3,4,0,5,0,6,0,99,0,11,0,12,0,13,0,87,0,15,19,56,29,5};
-	int dataOut[8][8];
-	runLengthDecoding2(size, dataIn, dataOut, &table);
-}
+// void test_runLengthDecoding2(){
+	// scanTable table = {.row = 0, .column = 0, .col_limit = 2, .firstStage = 0, .secondStage = 0, .thirdStage = 0, .finalStage = 0};
+	// int size = 8;
+	// int dataIn[24] = {1,2,3,4,0,5,0,6,0,99,0,11,0,12,0,13,0,87,0,15,19,56,29,5};
+	// int dataOut[8][8];
+	// runLengthDecoding2(size, dataIn, dataOut, &table);
+// }
