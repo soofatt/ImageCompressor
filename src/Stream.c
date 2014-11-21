@@ -148,15 +148,34 @@ void streamFlush(Stream *out){
   fputc(*(out->buffer),out->file);
 }
 
+void writeStuffedByte(Stream *out, uint8 byte){
+  char zeroByte = 0x00;
+  
+  if(byte == 0xFF){
+    out->buffer = &byte;
+    streamFlush(out);
+    out->buffer = &zeroByte;
+    streamFlush(out);
+  }
+  else{
+    out->buffer = &byte;
+    streamFlush(out);
+  }
+}
 
-
-
-
-
-
-
-
-
-
+char readStuffedByte(Stream *in){
+  unsigned char readByte, tempByte;
+  
+  readByte = streamReadBits(in, 8);
+  
+  if(readByte == 0xFF){
+    tempByte = streamReadBits(in, 8);
+    if(tempByte == 0x00){
+    }
+    else{}
+  }
+  
+  return readByte;
+}
 
 

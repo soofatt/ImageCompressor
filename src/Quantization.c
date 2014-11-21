@@ -1,7 +1,22 @@
+/**
+ * File name :
+ * Author :
+ * Date : 
+ *
+ * References:
+ * [1] Tinku Acharya, Ping-Sing Tsai, 
+ *     JPEG2000 Standard for Image Compression Concepts, Algorithms and VLSI Architectures,
+ *     Table 3.3 Luminance Quantization Table (pg. 67)
+ * [2] Tinku Acharya, Ping-Sing Tsai, 
+ *     JPEG2000 Standard for Image Compression Concepts, Algorithms and VLSI Architectures,
+ *     Table 3.4 Chrominance Quantization Table (pg. 68)
+ *
+ */
+
 #include "Quantization.h"
 #include <math.h>
 
-//Quantization matrix for 50% quality to compression ratio
+//[1]Luminance quantization matrix for 50% quality to compression ratio
 const int quantizationMatrix50[8][8] = {{16, 11, 10, 16, 24, 40, 51, 61},
                                         {12, 12, 14, 19, 26, 58, 60, 55},
                                         {14, 13, 16, 24, 40, 57, 69, 56},
@@ -11,7 +26,7 @@ const int quantizationMatrix50[8][8] = {{16, 11, 10, 16, 24, 40, 51, 61},
                                         {49, 64, 78, 87, 103, 121, 120, 101},
                                         {72, 92, 95, 98, 112, 100, 103, 99}};
                                         
-//Quantization matrix for 90% quality to compression ratio                                        
+//[1]Luminance quantization matrix for 90% quality to compression ratio                                        
 const int quantizationMatrix90[8][8] = {{3, 2, 2, 3, 5, 8, 10, 12},
                                         {2, 2, 3, 4, 5, 12, 12, 11},
                                         {3, 3, 3, 5, 8, 11, 14, 11},
@@ -21,7 +36,7 @@ const int quantizationMatrix90[8][8] = {{3, 2, 2, 3, 5, 8, 10, 12},
                                         {10, 13, 16, 17, 21, 24, 24, 21},
                                         {14, 18, 19, 20, 22, 20, 20, 20}};                                        
 
-//Quantization matrix for 10% quality to compression ratio                                        
+//[1]Luminance quantization matrix for 10% quality to compression ratio                                        
 const int quantizationMatrix10[8][8] = {{80, 60, 50, 80, 120, 200, 255, 255},
                                         {55, 60, 70, 95, 130, 255, 255, 255},
                                         {70, 65, 80, 120, 200, 255, 255, 255},
@@ -31,7 +46,7 @@ const int quantizationMatrix10[8][8] = {{80, 60, 50, 80, 120, 200, 255, 255},
                                         {245, 255, 255, 255, 255, 255, 255, 255},
                                         {255, 255, 255, 255, 255, 255, 255, 255}};
 
-//Quantization matrix for chrominance component of image                                        
+//[2]Quantization matrix for chrominance component of image                                        
 const int quantizationMatrixChrominance[8][8] = {{17, 18, 24, 47, 99, 99, 99, 99},
                                                  {18, 21, 26, 66, 99, 99, 99, 99},
                                                  {24, 26, 56, 99, 99, 99, 99, 99},
