@@ -148,7 +148,7 @@ void streamFlush(Stream *out){
   fputc(*(out->buffer),out->file);
 }
 
-void writeStuffedByte(Stream *out, unsigned char byte){
+void writeStuffedByte(Stream *out, uint8 byte){
   char zeroByte = 0x00;
   
   if(byte == 0xFF){

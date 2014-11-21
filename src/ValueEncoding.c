@@ -1,33 +1,37 @@
 #include "ValueEncoding.h"
 
-void valueEncoding(EncodeData *data, RunLengthData *input){
+#define putCategoryIntoInt(x) ((uint32)x) << 16
+#define getCategoryFromInt(x) x >> 16
+
+uint32 valueEncoding(int16 symbol){
   unsigned char category;
-  short int mask = 0x01;
+  short int mask = 0x01, value;
   int i;
+  uint32 categoryAndSymbol = 0;
   
-  category = getCategory(input->nextSymbol);
+  category = getCategory(symbol);
   
   for(i = 0; i < 15 - category; i++){
     mask = (mask << 1) + 1;
   }
   mask = ~(mask << category);
   
-  data->runAndCategory = input->run;
-  data->runAndCategory = (data->runAndCategory << 4) + category;
+  categoryAndSymbol = putCategoryIntoInt(category);
+  value = symbol;
   
-  if(input->nextSymbol < 0)
-    data->symbol = (input->nextSymbol & mask) - 1;
+  if(value < 0)
+    return categoryAndSymbol |= ((value & mask) - 1);
   else
-    data->symbol = input->nextSymbol;
+    return categoryAndSymbol |= value;
 }
 
-void valueDecoding(EncodeData *data, RunLengthData *container){
+int16 valueDecoding(uint32 categoryAndSymbol){
   unsigned char category;
-  short int temp, mask = 0x01, limit;
+  short int symbol, mask = 0x01, limit;
   int i;
   
-  category = data->runAndCategory & 0x0F;
-  container->run = data->runAndCategory >> 4;
+  category = getCategoryFromInt(categoryAndSymbol);
+  symbol = categoryAndSymbol;
   
   limit = 0x01 << category - 1;
   
@@ -36,10 +40,10 @@ void valueDecoding(EncodeData *data, RunLengthData *container){
   }
   mask = mask << category;
   
-  if(data->symbol < limit)
-    container->nextSymbol = (data->symbol | mask) + 1;
+  if(symbol < limit)
+    return (symbol | mask) + 1;
   else
-    container->nextSymbol = data->symbol;
+    return symbol;
 }
 
 char getCategory(short int symbol){

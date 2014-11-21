@@ -7,112 +7,110 @@ void setUp(void){
 void tearDown(void){
 }
 
-void test_valueEncoding_given_length_0_symbol_3_should_produce_bitsize_2_symbol_11(void){
-	EncodeData data;
-  RunLengthData input = {.run = 0, .nextSymbol = 3};
+void test_valueEncoding_given_symbol_3_should_produce_bitsize_2_symbol_11(void){
+	short int symbolInput = 3;
+  unsigned int result;
   
-  valueEncoding(&data, &input);
+  result = valueEncoding(symbolInput);
   
-  TEST_ASSERT_EQUAL(0x02, data.runAndCategory);  
-  TEST_ASSERT_EQUAL(0b11, data.symbol);  
+  TEST_ASSERT_EQUAL(0x00020003, result);
 }
 
-void test_valueEncoding_given_length_0_symbol_neg_3_should_produce_bitsize_2_symbol_00(void){
-	EncodeData data;
-  RunLengthData input = {.run = 0, .nextSymbol = -3};
+void test_valueEncoding_given_symbol_neg_3_should_produce_bitsize_2_symbol_00(void){
+	short int symbolInput = -3;
+  unsigned int result;
   
-  valueEncoding(&data, &input);
+  result = valueEncoding(symbolInput);
   
-  TEST_ASSERT_EQUAL(0x02, data.runAndCategory); 
-  TEST_ASSERT_EQUAL(0b00, data.symbol); //revert to 1's comp. & mask unrelated bits  
+  TEST_ASSERT_EQUAL(0x00020000, result); 
 }
 
-void test_valueEncoding_given_length_2_symbol_165_should_produce_bitsize_8_symbol_10100101(void){
-	EncodeData data;
-  RunLengthData input = {.run = 2, .nextSymbol = 165};
+/*
+ * Output: 0x00A5 = 0000 0000 1010 0101
+ */
+void test_valueEncoding_given_symbol_165_should_produce_bitsize_8_symbol_10100101(void){
+	short int symbolInput = 165;
+  unsigned int result;
   
-  valueEncoding(&data, &input);
+  result = valueEncoding(symbolInput);
   
-  TEST_ASSERT_EQUAL(0x28, data.runAndCategory); 
-  TEST_ASSERT_EQUAL(0b10100101, data.symbol);  
+  TEST_ASSERT_EQUAL(0x000800A5, result);   
 }
 
-void test_valueEncoding_given_length_10_symbol_1865_should_produce_bitsize_11_symbol_11101001001(void){
-	EncodeData data;
-  RunLengthData input = {.run = 10, .nextSymbol = 1865};
+/*
+ * Output: 0x0749 = 0000 0111 0100 1001
+ */
+void test_valueEncoding_given_symbol_1865_should_produce_bitsize_11_symbol_11101001001(void){
+	short int symbolInput = 1865;
+  unsigned int result;
   
-  valueEncoding(&data, &input);
+  result = valueEncoding(symbolInput);
   
-  TEST_ASSERT_EQUAL(0xAB, data.runAndCategory); 
-  TEST_ASSERT_EQUAL(0b11101001001, data.symbol);  
+  TEST_ASSERT_EQUAL(0x000B0749, result);   
 }
 
-void test_valueEncoding_given_length_4_symbol_neg_1500_should_produce_bitsize_11_symbol_01000100011(void){
-	EncodeData data;
-  RunLengthData input = {.run = 4, .nextSymbol = -1500};
+/*
+ * Output: 0x0223 = 0000 0010 0010 0011
+ */
+void test_valueEncoding_given_symbol_neg_1500_should_produce_bitsize_11_symbol_01000100011(void){
+	short int symbolInput = -1500;
+  unsigned int result;
   
-  valueEncoding(&data, &input);
+  result = valueEncoding(symbolInput);
   
-  TEST_ASSERT_EQUAL(0x4B, data.runAndCategory); 
-  TEST_ASSERT_EQUAL(0b01000100011, data.symbol);  
+  TEST_ASSERT_EQUAL(0x000B0223, result); 
 }
 
-void test_valueDecoding_given_run_and_category_02_and_symbol_3_should_produce_runLength_0_symbol_3(void){
-	EncodeData data = {.runAndCategory = 0x02, .symbol = 3};
-  RunLengthData result;
+void test_valueDecoding_given_categoryAndSymbol_0x00020003_should_produce_symbol_3(void){
+	unsigned int catAndSymbol = 0x00020003;
+  short int result;
   
-  valueDecoding(&data, &result);
+  result = valueDecoding(catAndSymbol);
   
-  TEST_ASSERT_EQUAL(0, result.run); 
-  TEST_ASSERT_EQUAL(3, result.nextSymbol);
+  TEST_ASSERT_EQUAL(0x0003, result);
 }
 
-void test_valueDecoding_given_run_and_category_02_and_symbol_neg_3_should_produce_runLength_0_symbol_neg_3(void){
-	EncodeData data = {.runAndCategory = 0x02, .symbol = 0b00};
-  RunLengthData result;
+void test_valueDecoding_given_categoryAndSymbol_0x00020000_should_produce_symbol_neg_3(void){
+	unsigned int catAndSymbol = 0x00020000;
+  short int result;
   
-  valueDecoding(&data, &result);
+  result = valueDecoding(catAndSymbol);
   
-  TEST_ASSERT_EQUAL(0, result.run); 
-  TEST_ASSERT_EQUAL(-3, result.nextSymbol);
+  TEST_ASSERT_EQUAL(-3, result);
 }
 
-void test_valueDecoding_given_run_and_category_02_and_symbol_neg_2_should_produce_runLength_0_symbol_neg_2(void){
-	EncodeData data = {.runAndCategory = 0x02, .symbol = 0b01};
-  RunLengthData result;
+void test_valueDecoding_given_categoryAndSymbol_0x00020001_should_produce_symbol_neg_2(void){
+	unsigned int catAndSymbol = 0x00020001;
+  short int result;
   
-  valueDecoding(&data, &result);
+  result = valueDecoding(catAndSymbol);
   
-  TEST_ASSERT_EQUAL(0, result.run); 
-  TEST_ASSERT_EQUAL(-2, result.nextSymbol);
+  TEST_ASSERT_EQUAL(-2, result);
 }
 
-void test_valueDecoding_given_run_and_category_47_and_symbol_neg_64_should_produce_runLength_4_symbol_neg_64(void){
-	EncodeData data = {.runAndCategory = 0x47, .symbol = 0b0111111};
-  RunLengthData result;
+void test_valueDecoding_given_categoryAndSymbol_0x0007003F_should_produce_symbol_neg_64(void){
+	unsigned int catAndSymbol = 0x0007003F;
+  short int result;
   
-  valueDecoding(&data, &result);
+  result = valueDecoding(catAndSymbol);
   
-  TEST_ASSERT_EQUAL(4, result.run); 
-  TEST_ASSERT_EQUAL(-64, result.nextSymbol);
+  TEST_ASSERT_EQUAL(-64, result);
 }
 
-void test_valueDecoding_given_run_and_category_AB_and_symbol_neg_1200_should_produce_runLength_10_symbol_neg_1200 (void){
-	EncodeData data = {.runAndCategory = 0xAB, .symbol = 0b01101001111};
-  RunLengthData result;
+void test_valueDecoding_given_categoryAndSymbol_0x000B034F_should_produce_symbol_neg_1200(void){
+	unsigned int catAndSymbol = 0x000B034F;
+  short int result;
   
-  valueDecoding(&data, &result);
+  result = valueDecoding(catAndSymbol);
   
-  TEST_ASSERT_EQUAL(10, result.run); 
-  TEST_ASSERT_EQUAL(-1200, result.nextSymbol);
+  TEST_ASSERT_EQUAL(-1200, result);
 }
 
-void test_valueDecoding_given_run_and_category_3B_and_symbol_1750_should_produce_runLength_3_symbol_1750 (void){
-	EncodeData data = {.runAndCategory = 0x3B, .symbol = 0b11011010110};
-  RunLengthData result;
+void test_valueDecoding_given_categoryAndSymbol_0x000B034F_should_produce_symbol_1750(void){
+	unsigned int catAndSymbol = 0x000B06D6;
+  short int result;
   
-  valueDecoding(&data, &result);
+  result = valueDecoding(catAndSymbol);
   
-  TEST_ASSERT_EQUAL(3, result.run); 
-  TEST_ASSERT_EQUAL(1750, result.nextSymbol);
+  TEST_ASSERT_EQUAL(1750, result);
 }
