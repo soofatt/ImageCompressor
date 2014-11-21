@@ -4,10 +4,65 @@
 	
 #define TransferVal() (out[i] = in[r][c])
 
-void updateRCTable(scanTable* table){
-	table->column += 1;
+void updateRCTable1(scanTable* table){
+	if(table->row != 7){
+		if(table->firstStage == 1){
+			IncrementBy1(table->column);
+			OFF(table->firstStage); ON(table->secondStage); 
+		}
+		else if(table->secondStage == 1){
+			DecrementBy1(table->column); IncrementBy1(table->row);
+			if(table->column == 0){
+				OFF(table->secondStage); ON(table->thirdStage); 
+			}
+		}
+		else if(table->thirdStage == 1){
+			IncrementBy1(table->row);
+			OFF(table->thirdStage); ON(table->finalStage);
+		}
+		else if(table->finalStage == 1){
+			DecrementBy1(table->row); IncrementBy1(table->column);
+			if(table->row == 0){
+				OFF(table->finalStage); ON(table->firstStage); 
+			}
+		}
+		if(table->row == 7){
+			ON(table->firstStage); OFF(table->secondStage);
+			OFF(table->thirdStage); OFF(table->finalStage);
+		}
+	}
 }
 
+void updateRCTable2(scanTable* table){
+	int i, j;
+		if(table->firstStage == 1){
+			IncrementBy1(table->column);
+			OFF(table->firstStage); ON(table->secondStage); 
+		}
+		else if(table->secondStage == 1){
+			DecrementBy1(table->row); IncrementBy1(table->column);
+			if(table->column == 7){
+				OFF(table->secondStage); ON(table->thirdStage); 
+			}
+		}
+		else if(table->thirdStage == 1){
+			IncrementBy1(table->row);
+			OFF(table->thirdStage); ON(table->finalStage);
+		}
+		else if(table->finalStage == 1){
+			DecrementBy1(table->column); IncrementBy1(table->row);
+			if(table->column == table->col_limit){
+				OFF(table->finalStage); ON(table->firstStage);
+				table->col_limit += 2;
+			}
+		}
+		i = table->row;
+		j = table->column;
+		if(i == 7 & j == 7){
+			OFF(table->firstStage); OFF(table->secondStage);
+			OFF(table->thirdStage); OFF(table->finalStage);
+		}
+}
 /* Function	: scanArray
  * Do		: Perform Zig-Zag ordering to 2D array and insert into 1D array
  *

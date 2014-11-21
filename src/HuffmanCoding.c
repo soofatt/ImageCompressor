@@ -9,9 +9,15 @@ void dumpArray(int* data, int size){
 }
 
 int runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* table){
-	int i = 0, j = 0, zeroCount = 0, limit1D = size*size*2;
-	
-	while(table->column < 3){
+	int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0;
+	table->firstStage = 1;
+	while(i!=size){
+		part1 += (i+1);
+		i++;
+	}
+	part2 = (size*size)-part1;
+	i = 0;
+	while(j < part1){
 		if(dataIn[table->row][table->column] != 0){
 			if(zeroCount != 0)
 				dataOut[i] = zeroCount;
@@ -22,15 +28,90 @@ int runLengthEncoding2(int size, int* dataOut, int dataIn[][size], scanTable* ta
 		}
 		else
 			zeroCount += 1;
-			
-		//Suppose to call zig zag and update RC
-		//table->column += 1;
-		updateRCTable(table);
-		printf("row : %d column : %d\n", table->row, table->column);
-		
+		updateRCTable1(table);
+		j++;
 	}
-	dumpArray(dataOut,6);
+	j = 0;
+	while(j < part2){
+		updateRCTable2(table);
+		if(dataIn[table->row][table->column] != 0){
+			if(zeroCount != 0)
+				dataOut[i] = zeroCount;
+			else
+				dataOut[i] = 0; 
+			i += 1; zeroCount = 0;
+			dataOut[i] = dataIn[table->row][table->column]; i += 1;
+		}
+		else
+			zeroCount += 1;
+		j++;
+	}
+	
 	return i;
+}
+
+/*	printf("%d %d\n",part1,part2);
+	printf("row : %d column : %d\n", table->row, table->column);
+	printf("First : %d\n", table->firstStage);
+	printf("Second : %d\n", table->secondStage);
+	printf("Third : %d\n", table->thirdStage);
+	printf("Final : %d\n", table->finalStage);
+	printf("i : %d\n",i);
+	dumpArray(dataOut,i);
+	for(i = 0; i < size; i++){
+		for(j = 0; j < size; j++){
+			printf("%d ",dataOut[i][j]);
+		}printf("\n");
+	}
+*/
+
+void runLengthDecoding2(int size, int* dataIn, int dataOut[][size], scanTable* table){
+	int i = 0, j = 0, zeroCount = 0, part1 = 0, part2 = 0, check = 1, insert = 0;
+	table->firstStage = 1;
+	while(i!=size){
+		part1 += (i+1);
+		i++;
+	}
+	part2 = (size*size)-part1;
+	i = 0;	
+	while(j < part1){
+		if(zeroCount == 0){
+			if(check && dataIn[i] != 0){
+				zeroCount = dataIn[i];
+				check = 0; insert = 1;
+			}
+			else{
+				i++;
+				dataOut[table->row][table->column] = dataIn[i]; i++;
+				check = 1; insert = 0;
+			}
+		}
+		if(zeroCount!=0){
+			dataOut[table->row][table->column] = 0;
+			zeroCount--;
+		}
+		updateRCTable1(table);
+		j++;
+	}j = 0;
+	while(j < part2){
+		updateRCTable2(table);
+		if(zeroCount == 0){
+			if(check && dataIn[i] != 0){
+				zeroCount = dataIn[i];
+				check = 0; insert = 1;
+			}
+			else{
+				i++;
+				dataOut[table->row][table->column] = dataIn[i]; i++;
+				check = 1; insert = 0;
+			}
+		}
+		if(zeroCount!=0){
+			dataOut[table->row][table->column] = 0;
+			zeroCount--;
+		}
+		j++;
+	}
 }
 
 void runLengthEncoding(int* dataIn, int* dataOut, int size){
