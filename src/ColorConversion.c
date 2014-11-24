@@ -1,31 +1,55 @@
+#include <math.h>
 #include "ColorConversion.h"
+#include "dataType.h"
 
-void convertToLuma(short int red[][8], short int green[][8], short int blue[][8], short int luma[][8]){
+#define Cred	0.299
+#define Cgreen	0.587
+#define Cblue	0.114
+
+/* Take Note
+ *	The input range for RGB is start from 0 - 255, using uint8 is enough to store RGB
+ *  The output range for Cb, Cr also start from 0 - 255
+ *	From formula given, Y, luminance component always positive value
+ *	However, Cb and Cr, Chrominance components might drop in range of -128 to 127
+ *	Therefore, level shifting(+128) should do after Cb, Cr calculated
+ *
+ *	Note that Cr and Cb must be subtracted out 128 before getting back the rgb value
+ */
+void convertToLuma(uint8 red[][8], uint8 green[][8], uint8 blue[][8], uint8 luma[][8]){
   int row, col;
-  
-  for(row = 0; row < 8; row++){
-    for(col = 0; col < 8; col++){
-      luma[row][col] = ((0.299*red[row][col]) + (0.587*green[row][col]) + (0.114*blue[row][col]) + 0.5);
-    }
-  }
+  for(row = 0; row < 8; row++)
+    for(col = 0; col < 8; col++)
+      luma[row][col] = round( ( Cred*red[row][col] ) + ( Cgreen*green[row][col] ) + ( Cblue*blue[row][col] ) );
 }
 
-void convertToChromaB(short int red[][8], short int green[][8], short int blue[][8], short int chroma[][8]){
+void convertToChromaB(uint8 blue[][8], uint8 luma[][8], uint8 chromaB[][8]){
   int row, col;
-  
-  for(row = 0; row < 8; row++){
-    for(col = 0; col < 8; col++){
-      chroma[row][col] = ((-.1687436*red[row][col]) + (-0.331264*green[row][col]) + (0.500002*blue[row][col]) + 128 + 0.5);
-    }
-  }
+  for(row = 0; row < 8; row++)
+    for(col = 0; col < 8; col++)
+      chromaB[row][col] = round( (blue[row][col] - luma[row][col]) / (2-(2*Cblue)) )+ 128;
 }
 
-void convertToChromaR(short int red[][8], short int green[][8], short int blue[][8], short int chroma[][8]){
+void convertToChromaR(uint8 red[][8], uint8 luma[][8], uint8 chromaR[][8]){
   int row, col;
-  
+  for(row = 0; row < 8; row++)
+    for(col = 0; col < 8; col++)
+      chromaR[row][col] = round( (red[row][col] - luma[row][col]) / (2-(2*Cred)) )+ 128;
+}
+
+void convertToRed(uint8 luma[][8], uint8 ChromaR[][8], uint8 red[][8]){
+  int row, col;
   for(row = 0; row < 8; row++){
     for(col = 0; col < 8; col++){
-      chroma[row][col] = ((0.5*red[row][col]) + (-0.418688*green[row][col]) + (-0.081312*blue[row][col]) + 128 + 0.5);
-    }
-  }
+      red[row][col] = round( (ChromaR[row][col]-128)*(2-(2*Cred)) + luma[row][col] + 0.5 );
+	  printf("%d ",red[row][col]);
+	}printf("\n");
+	}
 }
+
+// void convertToGreen(uint8 luma[][8], uint8 blue[][8], uint8 red[][8]), uint8 green[][8]){
+	// blue = chromaB * 2 -2*Cblue+luma
+// }
+
+// void convertToBlue(uint8 luma[][8], uint8 ChromaB[][8], uint8 blue[][8]){
+	// luma - Cblue*blue - Cred*red / Cgreen
+// }
