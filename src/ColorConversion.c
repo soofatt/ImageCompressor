@@ -38,18 +38,21 @@ void convertToChromaR(uint8 red[][8], uint8 luma[][8], uint8 chromaR[][8]){
 
 void convertToRed(uint8 luma[][8], uint8 ChromaR[][8], uint8 red[][8]){
   int row, col;
-  for(row = 0; row < 8; row++){
-    for(col = 0; col < 8; col++){
-      red[row][col] = round( (ChromaR[row][col]-128)*(2-(2*Cred)) + luma[row][col] + 0.5 );
-	  printf("%d ",red[row][col]);
-	}printf("\n");
-	}
+  for(row = 0; row < 8; row++)
+    for(col = 0; col < 8; col++)
+      red[row][col] = (ChromaR[row][col]-128)*(2-(2*Cred)) + luma[row][col];
 }
 
-// void convertToGreen(uint8 luma[][8], uint8 blue[][8], uint8 red[][8]), uint8 green[][8]){
-	// blue = chromaB * 2 -2*Cblue+luma
-// }
+void convertToGreen(uint8 luma[][8], uint8 blue[][8], uint8 red[][8], uint8 green[][8]){
+  int row, col;
+  for(row = 0; row < 8; row++)
+    for(col = 0; col < 8; col++)
+		green[row][col] = (luma[row][col] - (Cblue*blue[row][col]) - (Cred*red[row][col]) )/ Cgreen;
+}
 
-// void convertToBlue(uint8 luma[][8], uint8 ChromaB[][8], uint8 blue[][8]){
-	// luma - Cblue*blue - Cred*red / Cgreen
-// }
+void convertToBlue(uint8 luma[][8], uint8 ChromaB[][8], uint8 blue[][8]){
+  int row, col;
+  for(row = 0; row < 8; row++)
+    for(col = 0; col < 8; col++)
+		blue[row][col] = (ChromaB[row][col] - 128) * (2 - (2*Cblue)) +luma[row][col];
+}

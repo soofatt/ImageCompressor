@@ -70,5 +70,46 @@ void test_convertToRed_given_ChromaR_and_Y_should_obtain_Red(void){
   TEST_ASSERT_EQUAL(156, Cr[0][1]);
   
   convertToRed(Y, Cr, red_return);
-  TEST_ASSERT_EQUAL(48, red_return[0][0]);
+  TEST_ASSERT_EQUAL(47, red_return[0][0]);
 }
+
+void test_convertToBlue_given_ChromaB_and_Y_should_obtain_Blue(void){
+  uint8 Y[8][8];
+  uint8 Cb[8][8];
+  uint8 blue_return[8][8];
+  convertToLuma(red, green, blue, Y);
+  convertToChromaB(blue, Y, Cb);
+  TEST_ASSERT_EQUAL(146, Cb[0][0]);
+  TEST_ASSERT_EQUAL(80, Cb[0][1]);
+  
+  convertToBlue(Y, Cb, blue_return);
+  TEST_ASSERT_EQUAL(126, blue_return[0][0]);
+}
+
+void test_convertToGreen_given_red_return_blue_return_and_Y_should_obtain_Green(void){
+  uint8 Y[8][8];
+  uint8 Cb[8][8];
+  uint8 Cr[8][8];
+  uint8 blue_return[8][8];
+  uint8 red_return[8][8];
+  uint8 green_return[8][8];
+  
+  convertToLuma(red, green, blue, Y);
+  convertToChromaB(blue, Y, Cb);
+  TEST_ASSERT_EQUAL(146, Cb[0][0]);
+  TEST_ASSERT_EQUAL(80, Cb[0][1]);
+  
+  convertToChromaR(red, Y, Cr);
+  TEST_ASSERT_EQUAL(94, Cr[0][0]);
+  TEST_ASSERT_EQUAL(156, Cr[0][1]);
+  
+  convertToBlue(Y, Cb, blue_return);
+  TEST_ASSERT_EQUAL(126, blue_return[0][0]);
+  
+  convertToRed(Y, Cr, red_return);
+  TEST_ASSERT_EQUAL(47, red_return[0][0]);
+  
+  convertToGreen(Y, blue_return, red_return, green_return);
+  TEST_ASSERT_EQUAL(113, green_return[0][0]);
+}
+
