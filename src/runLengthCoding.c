@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "runLengthCoding.h"
 
+#define getZeroCount(x) (x >> 16)
+#define getSymbol(x) (x & 0x0000FFFF)
 void dumpArray(int* data, int size){
 	int i;
 	for(i = 0; i < size; i++){
@@ -58,6 +60,40 @@ uint32 runLengthEncode(int size, short int dataIn[][size], State* state){
 		}
 	}
 	return runAndSymbol;	
+}
+
+void runLengthDecode(int size, short int dataOut[][size], State* state, uint32 runAndSymbol){
+	int i, j;
+	//Detect runAndSymbol content for no of '0' and symbol
+	uint32 countZero = getZeroCount(runAndSymbol);
+	uint32 symbol = getSymbol(runAndSymbol);
+	uint8 row, column, returnRC = 0x00;
+	//If runAndSymbol is 0x00000000, then all the 2D array slots filled with 0
+	if(countZero == 0 && symbol == 0){
+		state->state = 1;
+		while(state->state){
+			returnRC = lookupRC(state->index);
+			column = returnRC & 0x0f; row = returnRC >> 4; state->index += 1;
+			dataOut[row][column] = 0;
+			if(returnRC == 0x77) state->state = 0;
+		}
+	}
+	//ALways make sure countZero <= 15
+	if(countZero <= 15){
+		//if runAndSymbol is (15,0) > 0x000F0000
+		if(countZero == 15)
+			countZero += 1;
+		//If no of '0' not zero, should insert 0 into first location of array
+		//and then update to next index with lookupRC
+		while(countZero!=0){
+			returnRC = lookupRC(state->index);
+			column = returnRC & 0x0f; row = returnRC >> 4; state->index += 1;
+			dataOut[row][column] = 0; countZero -= 1;
+		}
+		returnRC = lookupRC(state->index); state->index += 1;
+		column = returnRC & 0x0f; row = returnRC >> 4;
+		dataOut[row][column] = symbol;
+	}
 }
 
 void runLengthEncoding(int* dataIn, int* dataOut, int size){
