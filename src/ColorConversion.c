@@ -15,44 +15,44 @@
  *
  *	Note that Cr and Cb must be subtracted out 128 before getting back the rgb value
  */
-void convertToLuma(uint8 red[][8], uint8 green[][8], uint8 blue[][8], uint8 luma[][8]){
+void convertToLuma(RGB* colorRGB, YCbCr* lumaChrom){
   int row, col;
   for(row = 0; row < 8; row++)
     for(col = 0; col < 8; col++)
-      luma[row][col] = round( ( Cred*red[row][col] ) + ( Cgreen*green[row][col] ) + ( Cblue*blue[row][col] ) );
+		(*(lumaChrom->Y))[row][col] = round( ( Cred*(*(colorRGB->red))[row][col] ) + ( Cgreen*(*(colorRGB->green))[row][col] ) + ( Cblue*(*(colorRGB->blue))[row][col] ) );
 }
 
-void convertToChromaB(uint8 blue[][8], uint8 luma[][8], uint8 chromaB[][8]){
+void convertToChromaB(RGB* colorRGB, YCbCr* lumaChrom){
   int row, col;
   for(row = 0; row < 8; row++)
     for(col = 0; col < 8; col++)
-      chromaB[row][col] = round( (blue[row][col] - luma[row][col]) / (2-(2*Cblue)) )+ 128;
+      (*(lumaChrom->Cb))[row][col] = round( ((*(colorRGB->blue))[row][col] - (*(lumaChrom->Y))[row][col]) / (2-(2*Cblue)) )+ 128;
 }
 
-void convertToChromaR(uint8 red[][8], uint8 luma[][8], uint8 chromaR[][8]){
+void convertToChromaR(RGB* colorRGB, YCbCr* lumaChrom){
   int row, col;
   for(row = 0; row < 8; row++)
     for(col = 0; col < 8; col++)
-      chromaR[row][col] = round( (red[row][col] - luma[row][col]) / (2-(2*Cred)) )+ 128;
+      (*(lumaChrom->Cr))[row][col] = round( ((*(colorRGB->red))[row][col]  - (*(lumaChrom->Y))[row][col]) / (2-(2*Cred)) )+ 128;
 }
 
-void convertToRed(uint8 luma[][8], uint8 ChromaR[][8], uint8 red[][8]){
+void convertToRed(RGB* returnRGB, YCbCr* lumaChrom){
   int row, col;
   for(row = 0; row < 8; row++)
     for(col = 0; col < 8; col++)
-      red[row][col] = (ChromaR[row][col]-128)*(2-(2*Cred)) + luma[row][col];
+      (*(returnRGB->red))[row][col] = ((*(lumaChrom->Cr))[row][col]-128)*(2-(2*Cred)) + (*(lumaChrom->Y))[row][col];
 }
 
-void convertToGreen(uint8 luma[][8], uint8 blue[][8], uint8 red[][8], uint8 green[][8]){
+void convertToGreen(RGB* returnRGB, YCbCr* lumaChrom){
   int row, col;
   for(row = 0; row < 8; row++)
     for(col = 0; col < 8; col++)
-		green[row][col] = (luma[row][col] - (Cblue*blue[row][col]) - (Cred*red[row][col]) )/ Cgreen;
+		(*(returnRGB->green))[row][col] = ((*(lumaChrom->Y))[row][col] - (Cblue*(*(returnRGB->blue))[row][col]) - (Cred*(*(returnRGB->red))[row][col]) )/ Cgreen;
 }
 
-void convertToBlue(uint8 luma[][8], uint8 ChromaB[][8], uint8 blue[][8]){
+void convertToBlue(RGB* returnRGB, YCbCr* lumaChrom){
   int row, col;
   for(row = 0; row < 8; row++)
     for(col = 0; col < 8; col++)
-		blue[row][col] = (ChromaB[row][col] - 128) * (2 - (2*Cblue)) +luma[row][col];
+		(*(returnRGB->blue))[row][col] = ((*(lumaChrom->Cb))[row][col] - 128) * (2 - (2*Cblue)) + (*(lumaChrom->Y))[row][col];
 }

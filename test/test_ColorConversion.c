@@ -1,9 +1,9 @@
 #include "unity.h"
 #include "ColorConversion.h"
 
-void setUp(void){}
-
-void tearDown(void){}
+RGB colorRGB;
+YCbCr lumaChrom;
+RGB returnRGB;
 
 uint8 red[8][8] = {{48, 176, 191, 112, 212, 194, 24, 173},
                    {123, 233, 148, 224, 196, 12, 147, 8},
@@ -30,86 +30,99 @@ uint8 blue[8][8] = {{127, 52, 169, 177, 74, 60, 66, 135},
                     {35, 230, 185, 187, 196, 56, 173, 220},
                     {47, 70, 252, 10, 205, 140, 14, 129},
                     {180, 252, 66, 177, 204, 70, 38, 49},
-                    {148, 180, 232, 191, 40, 26, 18, 144}};  
+                    {148, 180, 232, 191, 40, 26, 18, 144}};
+
+uint8 Y[8][8];
+uint8 Cb[8][8];
+uint8 Cr[8][8];
+uint8 returnRed[8][8];
+uint8 returnBlue[8][8];
+uint8 returnGreen[8][8];
+
+void setUp(void){					
+  colorRGB.red = &red;
+  colorRGB.green = &green;
+  colorRGB.blue = &blue;
+  returnRGB.red = &returnRed;
+  returnRGB.green = &returnGreen;
+  returnRGB.blue = &returnBlue;
+  lumaChrom.Y = &Y;
+  lumaChrom.Cb = &Cb;
+  lumaChrom.Cr = &Cr;
+}
+
+void tearDown(void){}
+
+
 void test_convertToLuma_given_rgb_should_obtain_Y(void){
-  uint8 Y[8][8];
+  convertToLuma(&colorRGB, &lumaChrom);
   
-  convertToLuma(red, green, blue, Y);
-  
-  TEST_ASSERT_EQUAL(95, Y[0][0]);
-  TEST_ASSERT_EQUAL(137, Y[0][1]);
+  TEST_ASSERT_EQUAL(95, (*(lumaChrom.Y))[0][0]);
+  TEST_ASSERT_EQUAL(137, (*(lumaChrom.Y))[0][1]);
 }
 
 void test_convertToChromaB_given_rgb_and_Y_should_obtain_Cb(void){
-  uint8 Y[8][8];
-  uint8 Cb[8][8];
-  convertToLuma(red, green, blue, Y);
-  convertToChromaB(blue, Y, Cb);
+  convertToLuma(&colorRGB, &lumaChrom);
+  convertToChromaB(&colorRGB, &lumaChrom);
   
-  TEST_ASSERT_EQUAL(146, Cb[0][0]);
-  TEST_ASSERT_EQUAL(80, Cb[0][1]);
+  TEST_ASSERT_EQUAL(146, (*(lumaChrom.Cb))[0][0]);
+  TEST_ASSERT_EQUAL(80, (*(lumaChrom.Cb))[0][1]);
 }
 
 void test_convertToChromaR_given_rgb_and_Y_should_obtain_Cr(void){
-  uint8 Y[8][8];
-  uint8 Cr[8][8];
-  convertToLuma(red, green, blue, Y);
-  convertToChromaR(red, Y, Cr);
+  convertToLuma(&colorRGB, &lumaChrom);
+  convertToChromaR(&colorRGB, &lumaChrom);
   
-  TEST_ASSERT_EQUAL(94, Cr[0][0]);
-  TEST_ASSERT_EQUAL(156, Cr[0][1]);
+  TEST_ASSERT_EQUAL(94, (*(lumaChrom.Cr))[0][0]);
+  TEST_ASSERT_EQUAL(156,(*(lumaChrom.Cr))[0][1]);
 }
 
 void test_convertToRed_given_ChromaR_and_Y_should_obtain_Red(void){
-  uint8 Y[8][8];
-  uint8 Cr[8][8];
-  uint8 red_return[8][8];
-  convertToLuma(red, green, blue, Y);
-  convertToChromaR(red, Y, Cr);
-  TEST_ASSERT_EQUAL(94, Cr[0][0]);
-  TEST_ASSERT_EQUAL(156, Cr[0][1]);
+  convertToLuma(&colorRGB, &lumaChrom);
+  convertToChromaR(&colorRGB, &lumaChrom);
   
-  convertToRed(Y, Cr, red_return);
-  TEST_ASSERT_EQUAL(47, red_return[0][0]);
+  TEST_ASSERT_EQUAL(94, (*(lumaChrom.Cr))[0][0]);
+  TEST_ASSERT_EQUAL(156,(*(lumaChrom.Cr))[0][1]);
+  
+  convertToRed(&returnRGB, &lumaChrom);
+  TEST_ASSERT_EQUAL(47, (*(returnRGB.red))[0][0]);
+  TEST_ASSERT_EQUAL(176, (*(returnRGB.red))[0][1]);
 }
 
 void test_convertToBlue_given_ChromaB_and_Y_should_obtain_Blue(void){
-  uint8 Y[8][8];
-  uint8 Cb[8][8];
-  uint8 blue_return[8][8];
-  convertToLuma(red, green, blue, Y);
-  convertToChromaB(blue, Y, Cb);
-  TEST_ASSERT_EQUAL(146, Cb[0][0]);
-  TEST_ASSERT_EQUAL(80, Cb[0][1]);
+  convertToLuma(&colorRGB, &lumaChrom);
+  convertToChromaB(&colorRGB, &lumaChrom);
   
-  convertToBlue(Y, Cb, blue_return);
-  TEST_ASSERT_EQUAL(126, blue_return[0][0]);
+  TEST_ASSERT_EQUAL(146, (*(lumaChrom.Cb))[0][0]);
+  TEST_ASSERT_EQUAL(80, (*(lumaChrom.Cb))[0][1]);
+  
+  convertToBlue(&returnRGB, &lumaChrom);
+  TEST_ASSERT_EQUAL(126, (*(returnRGB.blue))[0][0]);
+  TEST_ASSERT_EQUAL(51, (*(returnRGB.blue))[0][1]);
 }
 
 void test_convertToGreen_given_red_return_blue_return_and_Y_should_obtain_Green(void){
-  uint8 Y[8][8];
-  uint8 Cb[8][8];
-  uint8 Cr[8][8];
-  uint8 blue_return[8][8];
-  uint8 red_return[8][8];
-  uint8 green_return[8][8];
+  convertToLuma(&colorRGB, &lumaChrom);
+  convertToChromaB(&colorRGB, &lumaChrom);
+  TEST_ASSERT_EQUAL(146, (*(lumaChrom.Cb))[0][0]);
+  TEST_ASSERT_EQUAL(80, (*(lumaChrom.Cb))[0][1]);
   
-  convertToLuma(red, green, blue, Y);
-  convertToChromaB(blue, Y, Cb);
-  TEST_ASSERT_EQUAL(146, Cb[0][0]);
-  TEST_ASSERT_EQUAL(80, Cb[0][1]);
+  convertToChromaR(&colorRGB, &lumaChrom);
+  TEST_ASSERT_EQUAL(94, (*(lumaChrom.Cr))[0][0]);
+  TEST_ASSERT_EQUAL(156,(*(lumaChrom.Cr))[0][1]);
   
-  convertToChromaR(red, Y, Cr);
-  TEST_ASSERT_EQUAL(94, Cr[0][0]);
-  TEST_ASSERT_EQUAL(156, Cr[0][1]);
+  convertToBlue(&returnRGB, &lumaChrom);
+  TEST_ASSERT_EQUAL(126, (*(returnRGB.blue))[0][0]);
+  TEST_ASSERT_EQUAL(51, (*(returnRGB.blue))[0][1]);
   
-  convertToBlue(Y, Cb, blue_return);
-  TEST_ASSERT_EQUAL(126, blue_return[0][0]);
+  convertToRed(&returnRGB, &lumaChrom);
+  TEST_ASSERT_EQUAL(47, (*(returnRGB.red))[0][0]);
+  TEST_ASSERT_EQUAL(176, (*(returnRGB.red))[0][1]);
   
-  convertToRed(Y, Cr, red_return);
-  TEST_ASSERT_EQUAL(47, red_return[0][0]);
-  
-  convertToGreen(Y, blue_return, red_return, green_return);
-  TEST_ASSERT_EQUAL(113, green_return[0][0]);
+  convertToGreen(&returnRGB, &lumaChrom);
+  TEST_ASSERT_EQUAL(113, (*(returnRGB.green))[0][0]);
+  TEST_ASSERT_EQUAL(133, (*(returnRGB.green))[0][1]);
 }
+
+
 

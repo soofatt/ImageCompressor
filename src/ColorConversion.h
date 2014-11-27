@@ -2,12 +2,26 @@
 #define ColorConversion_H
 #include "dataType.h"
 
-void convertToLuma(uint8 red[][8], uint8 green[][8], uint8 blue[][8], uint8 luma[][8]);
-void convertToChromaB(uint8 blue[][8], uint8 luma[][8], uint8 chromaB[][8]);
-void convertToChromaR(uint8 red[][8], uint8 luma[][8], uint8 chromaR[][8]);
+typedef struct RGB RGB;
+struct RGB{
+	uint8 (*red)[8][8];
+	uint8 (*blue)[8][8];
+	uint8 (*green)[8][8];
+};
 
-void convertToRed(uint8 luma[][8], uint8 ChromaR[][8], uint8 red[][8]);
-void convertToGreen(uint8 luma[][8], uint8 blue[][8], uint8 red[][8], uint8 green[][8]);
-void convertToBlue(uint8 luma[][8], uint8 ChromaB[][8], uint8 blue[][8]);
+typedef struct YCbCr YCbCr;
+struct YCbCr{
+	uint8 (*Y)[8][8];
+	uint8 (*Cb)[8][8];
+	uint8 (*Cr)[8][8];
+};
+
+void convertToLuma(RGB* colorRGB, YCbCr* lumaChrom);
+void convertToChromaB(RGB* colorRGB, YCbCr* lumaChrom);
+void convertToChromaR(RGB* colorRGB, YCbCr* lumaChrom);
+
+void convertToRed(RGB* returnRGB, YCbCr* lumaChrom);
+void convertToGreen(RGB* returnRGB, YCbCr* lumaChrom);
+void convertToBlue(RGB* returnRGB, YCbCr* lumaChrom);
 
 #endif // ColorConversion_H
