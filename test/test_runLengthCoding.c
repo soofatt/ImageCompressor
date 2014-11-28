@@ -287,6 +287,128 @@ void test_runLengthEncoder_should_do_all_the_2D_array(){
 	TEST_ASSERT_EQUAL(64,progress.index);
 }
 
+void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_0_with_array_start_with_15_zero(){
+	State progress = {.state = 0, .index = 0};
+	uint32 returnRunAndSymbol;
+	int size = 8;
+	short int dataIn[8][8] = {{  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   1,   0,   0,   0},
+							  {  0,   0,   0,   1, -40,   0,   0,   0},
+							  {  0,   0,   0, -29,   0,   0,   5,   0},
+							  {  0,  22,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(16,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x00000001,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(17,progress.index);
+}
+
+void test_runLengthEncoder_should_return_run_15_and_symbol_0_with_index_0_from_array_start_with_35_zero(){
+	State progress = {.state = 0, .index = 0};
+	uint32 returnRunAndSymbol;
+	short int size = 8;
+	short int dataIn[8][8] = {{  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   5,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0}, 
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  0,   0,   0,   0,   0,   0,   0,   0},
+							  {  1,   0,   0,   0,   0,   0,   0,   1}};
+	
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(16,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x000F0000,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(32,progress.index);
+	returnRunAndSymbol = runLengthEncode(size, dataIn, &progress);
+	TEST_ASSERT_EQUAL(0x00030001,returnRunAndSymbol);
+	TEST_ASSERT_EQUAL(0,progress.state);
+	TEST_ASSERT_EQUAL(36,progress.index);
+}
+
+void test_runLengthDecode_to_decode_runAndSymbol_0x0003000D_should_have_3_zero_and_1_D_symbol_which_is_13_and_put_into_2D_array(){
+	short int result[8][8];
+	State progress = {.state = 0, .index = 0};
+	uint32 runAndSymbol = 0x0003000D;
+	
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	
+	TEST_ASSERT_EQUAL(0,result[0][0]);
+	TEST_ASSERT_EQUAL(0,result[0][1]);
+	TEST_ASSERT_EQUAL(0,result[1][0]);
+	TEST_ASSERT_EQUAL(13,result[2][0]);
+}
+
+void test_runLengthDecode_to_decode_next_runAndSymbol_0x0000001D_should_have_no_zero_and_1D_symbol_which_is_29_and_put_into_next_index_2D_array(){
+	short int result[8][8];
+	State progress = {.state = 0, .index = 0};
+	uint32 runAndSymbol = 0x0003000D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x0000001D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	TEST_ASSERT_EQUAL(29,result[1][1]);
+}
+
+void test_runLengthDecode_to_decode_next_runAndSymbol_0x000F0000_should_have_15_zero_and_one_0_symbol_put_into_next_index_2D_array(){
+	short int result[8][8];
+	State progress = {.state = 0, .index = 0};
+	uint32 runAndSymbol = 0x0003000D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x0000001D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x000F0000;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	TEST_ASSERT_EQUAL(0,result[0][2]); // This is the first zero
+	TEST_ASSERT_EQUAL(0,result[5][0]);
+	TEST_ASSERT_EQUAL(0,result[6][0]); //This is the last 16th zero
+}
+
+void test_runLengthDecode_to_decode_next_runAndSymbol_0x00100000_do_nothing_and_return(){
+	short int result[8][8];
+	State progress = {.state = 0, .index = 0};
+	uint32 runAndSymbol = 0x0003000D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x0000001D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x000F0000;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x00100000;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	//because this call does not make any changes to 2D array, 
+	//and from previous call, progress.index stop at 22(latest index), it will not update to next
+	TEST_ASSERT_EQUAL(22,progress.index);
+}
+
+void test_runLengthDecode_to_decode_next_runAndSymbol_0x00000000_should_fill_the_remaining_slot_with_0(){
+	short int result[8][8];
+	State progress = {.state = 0, .index = 0};
+	uint32 runAndSymbol = 0x0003000D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x0000001D;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x000F0000;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x00100000;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	runAndSymbol = 0x00000000;
+	runLengthDecode(8,result, &progress, runAndSymbol);
+	TEST_ASSERT_EQUAL(0,result[6][7]);
+	TEST_ASSERT_EQUAL(0,result[7][6]);
+	TEST_ASSERT_EQUAL(0,result[7][7]);
+	TEST_ASSERT_EQUAL(65,progress.index); //Here show the last updated progress->index after getting the last index for 2D array which is 0x77
+}
+
 /* 
 void test_runLengthEncoding2(){
 	scanTable table = {.row = 0, .column = 0, .col_limit = 2, .stage = 0};
