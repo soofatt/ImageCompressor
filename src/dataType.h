@@ -6,6 +6,7 @@
 #include <malloc.h>
 
 #define uint32 unsigned int
+#define uint16 unsigned short int
 #define uint64 unsigned long long
 #define uint8 unsigned char
 #define uint16 unsigned short int

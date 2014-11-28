@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "Scan.h"
+#include "dataType.h"
 #include "CustomAssertion.h"
 
 void setUp(void){}
@@ -27,4 +28,18 @@ void test_scanArray(void){
 	
 	scanArray(inArray,outArray);
 	TEST_ASSERT_EQUAL_ARRAY(outArray,compareArray);
+}
+
+void test_lookupRC_given_index_of_63_should_be_return_0x77(){
+	uint8 returnRC;
+	int index = 63;
+	returnRC = lookupRC(index);
+	TEST_ASSERT_EQUAL(0x77,returnRC);
+}
+
+void test_lookupRC_given_index_of_50_should_be_return_0x64(){
+	uint8 returnRC;
+	int index = 50;
+	returnRC = lookupRC(index);
+	TEST_ASSERT_EQUAL(0x64,returnRC);
 }
