@@ -3,11 +3,11 @@
 
 typedef struct HuffmanTree HuffmanTree;
 struct HuffmanTree{
-  char runAndCategory;
+  char runAndSize;
   HuffmanTree *leftChild;
   HuffmanTree *rightChild;
 };
 
-HuffmanTree createNodes(HuffmanTree *rootNode, HuffmanTree *nodeAddLeft, HuffmanTree *nodeAddRight);
+void createNodes(HuffmanTree *rootNode, HuffmanTree *nodeAddLeft, HuffmanTree *nodeAddRight);
 
 #endif // HuffmanBianryTree_H
