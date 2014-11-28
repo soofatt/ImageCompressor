@@ -6,9 +6,9 @@ void setUp(void){}
 void tearDown(void){}
 
 void test_huffmanEncodeDCL_given_run_and_bitsize_0x06_should_return_0x0E(void){
-	char runLength = 0x00;
-  char bitSize = 0x06;
-  short int result;
+	uint8 runLength = 0x00;
+  uint8 bitSize = 0x06;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, dcLuminanceTable);
   
@@ -16,9 +16,9 @@ void test_huffmanEncodeDCL_given_run_and_bitsize_0x06_should_return_0x0E(void){
 }
 
 void test_huffmanEncodeDCC_given_run_and_bitsize_0x0A_should_return_0x2FE(void){
-	char runLength = 0x00;
-  char bitSize = 0x0A;
-  short int result;
+	uint8 runLength = 0x00;
+  uint8 bitSize = 0x0A;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, dcChrominanceTable);
   
@@ -26,9 +26,9 @@ void test_huffmanEncodeDCC_given_run_and_bitsize_0x0A_should_return_0x2FE(void){
 }
 
 void test_huffmanEncodeACL_given_run_and_bitsize_0x79_should_return_0xFFB4(void){
-	unsigned char runLength = 0x07;
-  unsigned char bitSize = 0x09;
-  unsigned short int result;
+	uint8 runLength = 0x07;
+  uint8 bitSize = 0x09;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, acLuminanceTable);
   
@@ -36,9 +36,9 @@ void test_huffmanEncodeACL_given_run_and_bitsize_0x79_should_return_0xFFB4(void)
 }
 
 void test_huffmanEncodeACL_given_run_and_bitsize_0xF0_should_return_0x7F9(void){
-	unsigned char runLength = 0x0F;
-  unsigned char bitSize = 0x00;
-  unsigned short int result;
+	uint8 runLength = 0x0F;
+  uint8 bitSize = 0x00;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, acLuminanceTable);
   
@@ -46,9 +46,9 @@ void test_huffmanEncodeACL_given_run_and_bitsize_0xF0_should_return_0x7F9(void){
 }
 
 void test_huffmanEncodeACL_given_run_and_bitsize_0x00_should_return_0x0A(void){
-	unsigned char runLength = 0x00;
-  unsigned char bitSize = 0x00;
-  unsigned short int result;
+	uint8 runLength = 0x00;
+  uint8 bitSize = 0x00;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, acLuminanceTable);
   
@@ -56,9 +56,9 @@ void test_huffmanEncodeACL_given_run_and_bitsize_0x00_should_return_0x0A(void){
 }
 
 void test_huffmanEncodeACC_given_run_and_bitsize_0xB3_should_return_0xFFB4(void){
-	unsigned char runLength = 0x0B;
-  unsigned char bitSize = 0x03;
-  unsigned short int result;
+	uint8 runLength = 0x0B;
+  uint8 bitSize = 0x03;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, acChrominanceTable);
   
@@ -66,9 +66,9 @@ void test_huffmanEncodeACC_given_run_and_bitsize_0xB3_should_return_0xFFB4(void)
 }
 
 void test_huffmanEncodeACC_given_run_and_bitsize_0xF0_should_return_0x3FA(void){
-	unsigned char runLength = 0x0F;
-  unsigned char bitSize = 0x00;
-  unsigned short int result;
+	uint8 runLength = 0x0F;
+  uint8 bitSize = 0x00;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, acChrominanceTable);
   
@@ -76,9 +76,9 @@ void test_huffmanEncodeACC_given_run_and_bitsize_0xF0_should_return_0x3FA(void){
 }
 
 void test_huffmanEncodeACC_given_run_and_bitsize_0x00_should_return_0x00(void){
-	unsigned char runLength = 0x00;
-  unsigned char bitSize = 0x00;
-  unsigned short int result;
+	uint8 runLength = 0x00;
+  uint8 bitSize = 0x00;
+  uint16 result;
   
   result = huffmanEncode(runLength, bitSize, acChrominanceTable);
   
