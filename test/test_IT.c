@@ -6,6 +6,8 @@
 #include "Quantization.h"
 #include "Stream.h"
 #include "ArrayIO.h"
+#include "ColorConversion.h"
+#include "dataType.h"
 
 #define TEST_ASSERT_EQUAL_MATRIX(expected, actual) \
   assert8by8Matrix(expected, actual, __LINE__);
@@ -383,3 +385,67 @@ void test_release2(){
   closeStream(inStream2);
   closeStream(outStream2);
 }
+
+void test_release_compression_logic(){
+CEXCEPTION_T error;
+  Stream *inStream = NULL;
+  Stream *outStream = NULL;
+  float inputMatrixA[8][8], inputMatrixB[8][8], inputMatrixC[8][8];
+  int size = 8;
+  RGB colorRGB;
+  YCbCr lumaChrom;
+
+  uint8 R[8][8], G[8][8], B[8][8];
+	uint8 Y[8][8], Cb[8][8], Cr[8][8];
+  
+  colorRGB.red = &R; colorRGB.green = &G; colorRGB.blue = &B;
+  lumaChrom.Y = &Y; lumaChrom.Cb = &Cb; lumaChrom.Cr = &Cr;
+	
+	Try{
+    inStream = openStream("test/Data/Water lilies.7z.010", "rb");
+    outStream = openStream("test/Data/outputData.7z.010", "wb");
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_FILE_NOT_EXIST, error);
+  }
+  
+  readFileToRGB(inStream,R,G,B);
+  
+  convertUINT8ToFloat(Y, inputMatrixA);
+  convertUINT8ToFloat(Cb, inputMatrixB);
+  convertUINT8ToFloat(Cr, inputMatrixC);
+
+  normalizeMatrix(8,inputMatrixA);
+  normalizeMatrix(8,inputMatrixB);
+  normalizeMatrix(8,inputMatrixC);
+  
+  twoD_DCT(8,inputMatrixA);
+  twoD_DCT(8,inputMatrixB);
+  twoD_DCT(8,inputMatrixC);
+  
+  quantizationFunction50(8,inputMatrixA);
+  quantizationFunction50(8,inputMatrixB);
+  quantizationFunction50(8,inputMatrixC);
+  
+  dumpMatrix(8, inputMatrixA);
+  dumpMatrix(8, inputMatrixB);
+  dumpMatrix(8, inputMatrixC);
+  
+  //To Encoder.....
+  //To Byte Stuff
+  
+  closeStream(inStream);
+  closeStream(outStream);
+}
+
+// convertToLuma(&colorRGB, &lumaChrom); convertToChromaB(&colorRGB, &lumaChrom); convertToChromaR(&colorRGB, &lumaChrom);
+// dumpMatrixUINT8(8,Y); dumpMatrixUINT8(8,Cb); dumpMatrixUINT8(8,Cr);
+// dumpMatrixUINT8(8,R); dumpMatrixUINT8(8,G); dumpMatrixUINT8(8,B);
+
+// printf("\n");
+// convertToRed(&colorRGB, &lumaChrom); convertToBlue(&colorRGB, &lumaChrom); convertToGreen(&colorRGB, &lumaChrom);
+// dumpMatrixUINT8(8,R); dumpMatrixUINT8(8,G); dumpMatrixUINT8(8,B);
+
+// dumpMatrix(8, inputMatrixA);
+// dumpMatrix(8, inputMatrixB);
+// dumpMatrix(8, inputMatrixC);
+
