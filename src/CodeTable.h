@@ -9,13 +9,16 @@ typedef struct CodeTable CodeTable;
 struct CodeTable{
   int type;
   CodeTable *table[16];
+  int codeIndex;
 };
 
 typedef struct RunSizeCode RunSizeCode;
 struct RunSizeCode{
   int type;
-  uint8 runAndSize;
+  uint8 runSize;
   char codeLength;
 };
+
+void createTable(CodeTable *codeTable, RunSizeCode runSizeCode[], int index);
 
 #endif // CodeTable_H
