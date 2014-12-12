@@ -430,8 +430,9 @@ CEXCEPTION_T error;
   dumpMatrix(8, inputMatrixB);
   dumpMatrix(8, inputMatrixC);
   
-  //To Encoder.....
-  //To Byte Stuff
+  //To Encoder..... can only detect state.index to stop when it is 64
+  //To Byte Stuff, output to file in Y, Cb, Cr
+  //Repeat process until (!feof(inStream))
   
   closeStream(inStream);
   closeStream(outStream);
@@ -448,4 +449,14 @@ CEXCEPTION_T error;
 // dumpMatrix(8, inputMatrixA);
 // dumpMatrix(8, inputMatrixB);
 // dumpMatrix(8, inputMatrixC);
+
+void xtest_release_decompression_logic(){
+  //Huffman decoder
+  //To Run Length Decode
+  //Loop 3 times to get Y Cb Cr arrays
+  //De-Q - IDCT - Denormalization - Color Conversion back to RGB
+  //Output to file again
+}
+
+
 
