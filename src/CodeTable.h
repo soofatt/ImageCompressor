@@ -19,6 +19,7 @@ struct RunSizeCode{
   char codeLength;
 };
 
-void createTable(CodeTable *codeTable, RunSizeCode runSizeCode[], int index);
+CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength);
+int getShift(int length);
 
 #endif // CodeTable_H
