@@ -5,7 +5,7 @@
 
 CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength){
   CodeTable *codeTable = malloc(sizeof(CodeTable));
-  int slots = 0, currentIndex, shift, i, j = 0;
+  int slots = 0, currentIndex, shift, i = 0, j = 0;
   
   currentIndex = index;
   
@@ -23,9 +23,14 @@ CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength){
       codeTable->codeIndex = currentIndex;
       return;
     }
+    // printf("j : %d\n", j);
+    // printf("currentIndex : %d\n", currentIndex);
   }
   
   for(i = j; i < 16; ){
+    if(currentIndex >= arrayLength)
+      break;
+    
     shift = getShift(runSizeCode[currentIndex].codeLength);
     slots = 1 << (4 - shift);
     // assert(currentIndex < 8);
@@ -39,13 +44,13 @@ CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength){
       }
     }
     else{
-    printf("runSize: %d", runSizeCode[currentIndex].runSize);
       codeTable->table[i] = createTable(runSizeCode, currentIndex, arrayLength);
-      currentIndex = codeTable->table[i]->codeIndex;
+      currentIndex = codeTable->table[i]->codeIndex - 1;
       i++;
     }
-    if(currentIndex < arrayLength)
+    if(currentIndex < arrayLength){
       currentIndex++;
+    }
     else
       break;
   }

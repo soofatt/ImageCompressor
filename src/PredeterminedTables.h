@@ -3,6 +3,32 @@
 
 #include "CodeTable.h"
 
+RunSizeCode DCLumTable[12] = {{.type = RUNSIZECODE, .runSize = 0x00, .codeLength = 2},
+                              {.type = RUNSIZECODE, .runSize = 0x01, .codeLength = 3},
+                              {.type = RUNSIZECODE, .runSize = 0x02, .codeLength = 3},
+                              {.type = RUNSIZECODE, .runSize = 0x03, .codeLength = 3},
+                              {.type = RUNSIZECODE, .runSize = 0x04, .codeLength = 3},
+                              {.type = RUNSIZECODE, .runSize = 0x05, .codeLength = 3},
+                              {.type = RUNSIZECODE, .runSize = 0x06, .codeLength = 4},
+                              {.type = CODETABLE, .runSize = 0x07, .codeLength = 5},
+                              {.type = RUNSIZECODE, .runSize = 0x08, .codeLength = 6},
+                              {.type = RUNSIZECODE, .runSize = 0x09, .codeLength = 7},
+                              {.type = RUNSIZECODE, .runSize = 0x0A, .codeLength = 8},
+                              {.type = CODETABLE, .runSize = 0x0B, .codeLength = 9}};
+                              
+RunSizeCode DCChromTable[12] = {{.type = RUNSIZECODE, .runSize = 0x00, .codeLength = 2},
+                                {.type = RUNSIZECODE, .runSize = 0x01, .codeLength = 2},
+                                {.type = RUNSIZECODE, .runSize = 0x02, .codeLength = 2},
+                                {.type = RUNSIZECODE, .runSize = 0x03, .codeLength = 3},
+                                {.type = RUNSIZECODE, .runSize = 0x04, .codeLength = 4},
+                                {.type = CODETABLE, .runSize = 0x05, .codeLength = 5},
+                                {.type = RUNSIZECODE, .runSize = 0x06, .codeLength = 6},
+                                {.type = RUNSIZECODE, .runSize = 0x07, .codeLength = 7},
+                                {.type = RUNSIZECODE, .runSize = 0x08, .codeLength = 8},
+                                {.type = CODETABLE, .runSize = 0x09, .codeLength = 9},
+                                {.type = RUNSIZECODE, .runSize = 0x0A, .codeLength = 10},
+                                {.type = RUNSIZECODE, .runSize = 0x0B, .codeLength = 11}};
+
 RunSizeCode ACLumTable[162] = {{.type = RUNSIZECODE, .runSize = 0x01, .codeLength = 2},
                                {.type = RUNSIZECODE, .runSize = 0x02, .codeLength = 2},
                                {.type = RUNSIZECODE, .runSize = 0x03, .codeLength = 3},
