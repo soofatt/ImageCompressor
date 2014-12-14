@@ -13,6 +13,6 @@ extern uint8 decodeDCCTable[4][16];
 
 uint16 huffmanEncode(uint8 runLength, uint8 bitSize, uint16 table[]);
 
-uint8 huffmanDecode(uint16 codeWord, uint8 table[4][16]);
+uint8 huffmanDecode(uint16 codeWord, CodeTable *huffmanTable);
 
 #endif // HuffmanCoding_H
