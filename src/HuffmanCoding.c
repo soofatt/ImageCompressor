@@ -80,11 +80,18 @@ uint16 huffmanEncode(uint8 runLength, uint8 bitSize, uint16 table[]){
   
   tempResult = table[index];
 
+  if(tempResult == 1 && index <= 2)
+    counter = 1;
+  else if(tempResult == 2 && index < 2)
+    counter = 1;
+  else if(tempResult == 3 && index < 3)
+    counter = 1;
+  
   while(tempResult != 0){
     counter++;
     tempResult >>= 1;
   }
-  
+
   shift = 16 - counter;
   
   result = table[index] << shift;
@@ -93,15 +100,28 @@ uint16 huffmanEncode(uint8 runLength, uint8 bitSize, uint16 table[]){
 }
 
 uint8 huffmanDecode(uint16 codeWord, CodeTable *huffmanTable){
-  uint8 result, shift = 12;
+  uint8 result, shift = 12, loop = 4;
   uint16 tableIndex;
+  CodeTable *currentTable;
   
-  tableIndex = codeWord >> shift;
+  currentTable = huffmanTable;
+  
+  tableIndex = (codeWord >> shift) & 0x000F;
   // printf("%x", tableIndex);
-  result = ((RunSizeCode *)(huffmanTable->table[tableIndex]))->runSize;
+  while(loop != 0){
+    if(currentTable->table[tableIndex]->type == CODETABLE){
+      currentTable = currentTable->table[tableIndex];
+      shift -= 4;
+      tableIndex = (codeWord >> shift) & 0x000F;
+      loop--;
+      // if(((RunSizeCode *)(currentTable->table[tableIndex]))->type == RUNSIZECODE)
+        return result = ((RunSizeCode *)(currentTable->table[tableIndex]))->runSize;
+    }
+    else
+      return result = ((RunSizeCode *)(currentTable->table[tableIndex]))->runSize;
+  }
   // printf("%x", ((RunSizeCode *)(huffmanTable->table[tableIndex]))->runSize);
-  
-  return result;
+
 }
 
 
