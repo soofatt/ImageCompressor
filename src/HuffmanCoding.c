@@ -80,11 +80,11 @@ uint16 huffmanEncode(uint8 runLength, uint8 bitSize, uint16 table[]){
   
   tempResult = table[index];
 
-  if(tempResult == 1 && index <= 2)
+  if(tempResult == 1 && index <= 2)//Special case for indexes starting with 0
     counter = 1;
-  else if(tempResult == 2 && index < 2)
+  else if(tempResult == 2 && index < 2)//""
     counter = 1;
-  else if(tempResult == 3 && index < 3)
+  else if(tempResult == 3 && index < 3)//""
     counter = 1;
   
   while(tempResult != 0){

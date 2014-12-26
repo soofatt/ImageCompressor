@@ -153,6 +153,24 @@ void test_huffmanDecodeDCL_given_codeword_0xFF00_should_return_0x0B(void){
   TEST_ASSERT_EQUAL(0x0B, result);
 }
 
+void test_huffmanDecodeDCC_given_codeword_0x4000_should_return_0x01(void){
+	uint16 codeWord = 0x4000;
+  uint8 result;
+  CodeTable *dcDecodeChromTable = createTable(DCChromTable, 0, sizeof(DCChromTable)/sizeof(RunSizeCode));
+  result = huffmanDecode(codeWord, dcDecodeChromTable);
+  
+  TEST_ASSERT_EQUAL(0x01, result);
+}
+
+void test_huffmanDecodeDCC_given_codeword_0xFC00_should_return_0x07(void){
+	uint16 codeWord = 0xFC00;
+  uint8 result;
+  CodeTable *dcDecodeChromTable = createTable(DCChromTable, 0, sizeof(DCChromTable)/sizeof(RunSizeCode));
+  result = huffmanDecode(codeWord, dcDecodeChromTable);
+  
+  TEST_ASSERT_EQUAL(0x07, result);
+}
+
 void test_huffmanDecodeDCC_given_codeword_0xFFC0_should_return_0x0B(void){
 	uint16 codeWord = 0xFFC0;
   uint8 result;
@@ -160,4 +178,52 @@ void test_huffmanDecodeDCC_given_codeword_0xFFC0_should_return_0x0B(void){
   result = huffmanDecode(codeWord, dcDecodeChromTable);
   
   TEST_ASSERT_EQUAL(0x0B, result);
+}
+
+/*
+ *0xB000 -> 0x04        0xFFC5 -> 0x99
+ *0xEC00 -> 0x41        0xFF20 -> 0xF0 (ZRL)
+ *0xFDC0 -> 0x23        0xA000 -> 0x00 (EOB)
+ */
+void test_huffmanDecodeACL_given_few_codewords_should_return_correct_results(void){
+	uint16 codeWord[6] = {0xB000, 0xEC00, 0xFDC0, 0xFFC5, 0xFF20, 0xA000};
+  uint8 result;
+  CodeTable *acDecodeLumTable = createTable(ACLumTable, 0, sizeof(ACLumTable)/sizeof(RunSizeCode));
+  
+  result = huffmanDecode(codeWord[0], acDecodeLumTable);
+  TEST_ASSERT_EQUAL(0x04, result);
+  result = huffmanDecode(codeWord[1], acDecodeLumTable);
+  TEST_ASSERT_EQUAL(0x41, result);
+  result = huffmanDecode(codeWord[2], acDecodeLumTable);
+  TEST_ASSERT_EQUAL(0x23, result);
+  result = huffmanDecode(codeWord[3], acDecodeLumTable);
+  TEST_ASSERT_EQUAL(0x99, result);
+  result = huffmanDecode(codeWord[4], acDecodeLumTable);
+  TEST_ASSERT_EQUAL(0xF0, result);
+  result = huffmanDecode(codeWord[5], acDecodeLumTable);
+  TEST_ASSERT_EQUAL(0x00, result);
+}
+
+/*
+ *0x4000 -> 0x01        0xFFEF -> 0xE4
+ *0xF400 -> 0x71        0xFE80 -> 0xF0 (ZRL)
+ *0xFC80 -> 0xB1        0x0000 -> 0x00 (EOB)
+ */
+void test_huffmanDecodeACC_given_few_codewords_should_return_correct_results(void){
+	uint16 codeWord[6] = {0x4000, 0xF400, 0xFC80, 0xFFEF, 0xFE80, 0x0000};
+  uint8 result;
+  CodeTable *acDecodeChromTable = createTable(ACChromTable, 0, sizeof(ACChromTable)/sizeof(RunSizeCode));
+  
+  result = huffmanDecode(codeWord[0], acDecodeChromTable);
+  TEST_ASSERT_EQUAL(0x01, result);
+  result = huffmanDecode(codeWord[1], acDecodeChromTable);
+  TEST_ASSERT_EQUAL(0x71, result);
+  result = huffmanDecode(codeWord[2], acDecodeChromTable);
+  TEST_ASSERT_EQUAL(0xB1, result);
+  result = huffmanDecode(codeWord[3], acDecodeChromTable);
+  TEST_ASSERT_EQUAL(0xE4, result);
+  result = huffmanDecode(codeWord[4], acDecodeChromTable);
+  TEST_ASSERT_EQUAL(0xF0, result);
+  result = huffmanDecode(codeWord[5], acDecodeChromTable);
+  TEST_ASSERT_EQUAL(0x00, result);
 }

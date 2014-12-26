@@ -203,7 +203,7 @@ RunSizeCode ACChromTable[162] = {{.type = RUNSIZECODE, .runSize = 0x00, .codeLen
                                  {.type = RUNSIZECODE, .runSize = 0x12, .codeLength = 6},
                                  {.type = RUNSIZECODE, .runSize = 0x41, .codeLength = 6},
                                  {.type = RUNSIZECODE, .runSize = 0x51, .codeLength = 6},
-                                 {.type = RUNSIZECODE, .runSize = 0x07, .codeLength = 7},
+                                 {.type = CODETABLE, .runSize = 0x07, .codeLength = 7},
                                  {.type = RUNSIZECODE, .runSize = 0x61, .codeLength = 7},
                                  {.type = RUNSIZECODE, .runSize = 0x71, .codeLength = 7},
                                  {.type = RUNSIZECODE, .runSize = 0x13, .codeLength = 8},
