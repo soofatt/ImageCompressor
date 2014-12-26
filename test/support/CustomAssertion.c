@@ -14,3 +14,19 @@ void assertArrayData(float* inputArray, float* compareArray, const UNITY_LINE_TY
 			printf("\nExpected is %f but actual is %f\n",compareArray[i],inputArray[i]);
 	}
 }
+
+void assertUINT82DArray(unsigned char inputArray[8][8], unsigned char compareArray[8][8], const UNITY_LINE_TYPE lineNumber){
+	int i, j;
+	if(inputArray == NULL)
+		UNITY_TEST_FAIL(lineNumber, "There no Input Array.\n");
+	if(compareArray == NULL)
+		UNITY_TEST_FAIL(lineNumber, "There no Compare Array.\n");
+		
+	for(i = 0; i < 8; i++){
+		for(j = 0; j < 8; j++){
+		UNITY_TEST_ASSERT_EQUAL_UINT8(compareArray[i][j], inputArray[i][j], lineNumber, "Expected is different from actual.");
+		if(inputArray[i][j] != compareArray[i][j])
+			printf("\nExpected is %d but actual is %d\n",compareArray[i][j],inputArray[i][j]);
+		}
+	}
+}
