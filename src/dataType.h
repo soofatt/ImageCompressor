@@ -9,6 +9,7 @@
 #define uint16 unsigned short int
 #define uint64 unsigned long long
 #define uint8 unsigned char
+#define uint16 unsigned short int
 
 typedef enum { NO_ERROR,
                ERR_END_OF_FILE,
