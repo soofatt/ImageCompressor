@@ -7,7 +7,7 @@ RunSizeCode DCLumTable[12] = {{.type = RUNSIZECODE, .runSize = 0x00, .codeLength
                               {.type = RUNSIZECODE, .runSize = 0x03, .codeLength = 3},
                               {.type = RUNSIZECODE, .runSize = 0x04, .codeLength = 3},
                               {.type = RUNSIZECODE, .runSize = 0x05, .codeLength = 3},
-                              {.type = RUNSIZECODE, .runSize = 0x06, .codeLength = 4},
+                              {.type = RUNSIZECODE2, .runSize = 0x06, .codeLength = 4},
                               {.type = CODETABLE, .runSize = 0x07, .codeLength = 5},
                               {.type = RUNSIZECODE, .runSize = 0x08, .codeLength = 6},
                               {.type = RUNSIZECODE, .runSize = 0x09, .codeLength = 7},

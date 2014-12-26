@@ -6,14 +6,14 @@
 CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength){
   CodeTable *codeTable = malloc(sizeof(CodeTable));
   int slots = 0, currentIndex, shift, i = 0, j = 0;
-  codeTable->type = RUNSIZECODE;
+  codeTable->codeType = RUNSIZECODE;
   currentIndex = index;
   
   shift = getShift(runSizeCode[currentIndex].codeLength);
   slots = 1 << (4 - shift);
   
   if(runSizeCode[currentIndex].type == CODETABLE){
-    codeTable->type = CODETABLE;
+    codeTable->codeType = CODETABLE;
     while(slots != 0){
       codeTable->table[j] = (CodeTable *)(&runSizeCode[currentIndex]);
       j++;
@@ -36,7 +36,7 @@ CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength){
     slots = 1 << (4 - shift);
     // assert(currentIndex < 8);
     
-    if(runSizeCode[currentIndex].type == RUNSIZECODE){
+    if(runSizeCode[currentIndex].type == RUNSIZECODE || runSizeCode[currentIndex].type == RUNSIZECODE2){
       while(slots != 0){
         // assert(codeTable->table[i] != NULL); // Check if table is not null
         codeTable->table[i] = (CodeTable *)(&runSizeCode[currentIndex]);

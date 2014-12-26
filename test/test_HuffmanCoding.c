@@ -143,3 +143,21 @@ void test_huffmanDecodeDCL_given_codeword_0xF000_should_return_0x07(void){
   
   TEST_ASSERT_EQUAL(0x07, result);
 }
+
+void test_huffmanDecodeDCL_given_codeword_0xFF00_should_return_0x0B(void){
+	uint16 codeWord = 0xFF00;
+  uint8 result;
+  CodeTable *dcDecodeLumTable = createTable(DCLumTable, 0, sizeof(DCLumTable)/sizeof(RunSizeCode));
+  result = huffmanDecode(codeWord, dcDecodeLumTable);
+  
+  TEST_ASSERT_EQUAL(0x0B, result);
+}
+
+void test_huffmanDecodeDCC_given_codeword_0xFFC0_should_return_0x0B(void){
+	uint16 codeWord = 0xFFC0;
+  uint8 result;
+  CodeTable *dcDecodeChromTable = createTable(DCChromTable, 0, sizeof(DCChromTable)/sizeof(RunSizeCode));
+  result = huffmanDecode(codeWord, dcDecodeChromTable);
+  
+  TEST_ASSERT_EQUAL(0x0B, result);
+}

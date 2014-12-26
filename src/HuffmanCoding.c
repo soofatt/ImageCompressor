@@ -109,16 +109,31 @@ uint8 huffmanDecode(uint16 codeWord, CodeTable *huffmanTable){
   tableIndex = (codeWord >> shift) & 0x000F;
   // printf("%x", tableIndex);
   while(loop != 0){
-    if(currentTable->table[tableIndex]->type == CODETABLE){
+    if(currentTable->table[tableIndex]->codeType == CODETABLE){
+      // printf("%d\n", currentTable->table[tableIndex]->codeType);
+      // printf("%x\n", currentTable->table[0]->runSize);
       currentTable = currentTable->table[tableIndex];
+      
       shift -= 4;
       tableIndex = (codeWord >> shift) & 0x000F;
       loop--;
-      // if(((RunSizeCode *)(currentTable->table[tableIndex]))->type == RUNSIZECODE)
+      // printf("%d\n", ((RunSizeCode *)(currentTable->table[tableIndex]))->type);
+      // printf("%d\n", ((RunSizeCode *)(currentTable->table[15]))->type);
+      // printf("%d\n", ((RunSizeCode *)(currentTable->table[8]))->runSize);
+      // printf("a\n");
+      // printf("%x\n", ((RunSizeCode *)(currentTable->table[15]->table[0]))->runSize);
+      // printf("%d\n", currentTable->table[tableIndex]->type);
+      // printf("%d\n", loop);
+      // printf("%d\n", tableIndex);
+      // printf("%d\n", ((RunSizeCode *)(currentTable->table[tableIndex]))->type);
+      if(((RunSizeCode *)(currentTable->table[tableIndex]))->type != CODETABLE || tableIndex == 0)
         return result = ((RunSizeCode *)(currentTable->table[tableIndex]))->runSize;
     }
-    else
-      return result = ((RunSizeCode *)(currentTable->table[tableIndex]))->runSize;
+    else{
+      // printf("%d\n", currentTable->table[tableIndex]->type);
+      // printf("%d\n", ((RunSizeCode *)(currentTable->table[tableIndex]))->type);
+      // printf("%d\n", tableIndex);
+      return result = ((RunSizeCode *)(currentTable->table[tableIndex]))->runSize;}
   }
   // printf("%x", ((RunSizeCode *)(huffmanTable->table[tableIndex]))->runSize);
 
