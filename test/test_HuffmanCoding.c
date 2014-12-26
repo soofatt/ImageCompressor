@@ -2,6 +2,9 @@
 #include "CodeTable.h"
 #include "PredeterminedTables.h"
 #include "HuffmanCoding.h"
+#include "runLengthCoding.h"
+#include "ValueEncoding.h"
+#include "Scan.h"
 
 void setUp(void){}
 
@@ -115,6 +118,23 @@ void test_huffmanEncodeACC_given_run_and_bitsize_0x00_should_return_0x00(void){
   result = huffmanEncode(runLength, bitSize, acChrominanceTable);
   
   TEST_ASSERT_EQUAL(0x00, result);
+}
+
+void test_huffmanEncodePull_DCL(void){
+	State progress = {.state = 0, .index = 0};
+  uint32 result;
+  short int dataIn[8][8] = {{160,  44,  20,  80,  24,   0,   0,   0},
+                            { 36, 108,  14,  38,  26,   0,   0,   0},
+                            {-98, -65,  16, -48, -40,   0,   0,   0},
+                            {-42, -85,   0, -29,   0,   0,   0,   0},
+                            {-36,  22,   0,   0,   0,   0,   0,   0}, 
+                            {  0,   0,   0,   0,   5,   0,   0,   0},
+                            {  0,   0,   0,   0,   0,   0,   0,   0},
+                            {  1,   0,   0,   0,   0,   0,   0,   1}};
+  
+  result = huffmanEncodePull(&progress, dataIn, dcLuminanceTable);
+  
+  TEST_ASSERT_EQUAL(0xF80000A0, result);
 }
 
 void test_huffmanDecodeDCL_given_codeword_0xE000_should_return_0x06(void){

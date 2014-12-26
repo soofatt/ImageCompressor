@@ -1,6 +1,7 @@
 #include "CodeTable.h"
 #include "HuffmanCoding.h"
-// #include "PredeterminedTables.h"
+#include "runLengthCoding.h"
+#include "ValueEncoding.h"
 
 uint16 dcLuminanceTable[12] = {0x00, 0x02, 0x03, 0x04, 0x05, 0x06, 0x0E, 0x1E, 0x3E, 0x7E, 0xFE, 0x1FE};
 uint16 dcChrominanceTable[12] = {0x00, 0x01, 0x02, 0x06, 0x0E, 0x1E, 0x3E, 0x7E, 0xFE, 0x1FE, 0x3FE, 0x7FE};
@@ -95,6 +96,50 @@ uint16 huffmanEncode(uint8 runLength, uint8 bitSize, uint16 table[]){
   shift = 16 - counter;
   
   result = table[index] << shift;
+  
+  return result;
+}
+
+//result = 0x  0000    0000
+//           codeword symbol
+uint32 huffmanEncodePull(State *progress, short int dataIn[][8], uint16 table[]){
+  uint8 index = 0, counter = 0, shift = 0;
+  uint16 tempResult, run, valueEncodedSymbol, bitSize;
+  uint32 runAndSymbol, valueEncodeResult, result;
+  short int symbol;
+  
+  runAndSymbol = runLengthEncode(8, dataIn, progress);
+  
+  run = runAndSymbol >> 16;
+  symbol = runAndSymbol & 0x0000ffff;
+  
+  valueEncodeResult = valueEncoding(symbol);
+  
+  bitSize = valueEncodeResult >> 16;
+  valueEncodedSymbol = valueEncodeResult & 0x0000ffff;
+
+  index = run;
+  index = (index<<4) + bitSize;
+  
+  tempResult = table[index];
+
+  if(tempResult == 1 && index <= 2)//Special case for indexes starting with 0
+    counter = 1;
+  else if(tempResult == 2 && index < 2)//""
+    counter = 1;
+  else if(tempResult == 3 && index < 3)//""
+    counter = 1;
+  
+  while(tempResult != 0){
+    counter++;
+    tempResult >>= 1;
+  }
+
+  shift = 16 - counter;
+  
+  result = table[index] << shift;
+  
+  result = (result << 16) + valueEncodedSymbol;
   
   return result;
 }
