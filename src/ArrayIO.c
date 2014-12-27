@@ -2,6 +2,14 @@
 #include "ArrayIO.h"
 #include "dataType.h"
 
+/*  readBlock
+ *  Desc.  : Function to fill 8x8 array with input image data.
+ *
+ *  Input
+ *    in : File in stream handler.
+ *    matrixArray : 8x8 array container.
+ *
+ */
 void readBlock(Stream *in, int size, float matrixArray[][size]){
 	int row, col;
   
@@ -12,6 +20,14 @@ void readBlock(Stream *in, int size, float matrixArray[][size]){
   }
 }
 
+/*  writeBlock
+ *  Desc.  : Function to write elements from 8x8 array to file.
+ *
+ *  Input
+ *    out : File out stream handler.
+ *    matrixArray : 8x8 array container.
+ *
+ */
 void writeBlock(Stream *out, int size, float matrixArray[][size]){
   int row, col;
   
@@ -22,6 +38,14 @@ void writeBlock(Stream *out, int size, float matrixArray[][size]){
   }
 }
 
+/*  writeBlock11Bit
+ *  Desc.  : Function to write 2 bytes.
+ *
+ *  Input
+ *    out : File out stream handler.
+ *    matrixArray : 8x8 array container.
+ *
+ */
 void writeBlock11Bit(Stream *out, int size, float matrixArray[][size]){
   int row, col;
   
@@ -32,6 +56,14 @@ void writeBlock11Bit(Stream *out, int size, float matrixArray[][size]){
   }
 }
 
+/*  splitByteAndWrite
+ *  Desc.  : Subfunction to split input into two bytes and write twice
+ *
+ *  Input
+ *    out : File out stream handler.
+ *    matrixArrayElement : Array element to be split.
+ *
+ */
 void splitByteAndWrite(Stream *out, float matrixArrayElement){
 	short int bytesToWrite;
   char tempByte;
@@ -46,6 +78,14 @@ void splitByteAndWrite(Stream *out, float matrixArrayElement){
   
 }
 
+/*  readBlock11Bit
+ *  Desc.  : Function to read 2 bytes.
+ *
+ *  Input
+ *    in : File in stream handler.
+ *    matrixArray : 8x8 array container.
+ *
+ */
 void readBlock11Bit(Stream *in, int size, short int matrixArray[][size]){
 	int row, col;
   

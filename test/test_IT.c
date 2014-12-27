@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "Common.h"
+#include "CustomAssertion.h"
 #include "DCT.h"
 #include "IDCT.h"
 #include "Normalization.h"
@@ -7,20 +8,13 @@
 #include "Stream.h"
 #include "ArrayIO.h"
 #include "ColorConversion.h"
+#include "CodeTable.h"
+#include "HuffmanCoding.h"
+#include "runLengthCoding.h"
+#include "ValueEncoding.h"
+#include "Scan.h"
+#include "PredeterminedTables.h"
 #include "dataType.h"
-
-#define TEST_ASSERT_EQUAL_MATRIX(expected, actual) \
-  assert8by8Matrix(expected, actual, __LINE__);
-
-void assert8by8Matrix(float expectedMatrix[][8], float actualMatrix[0][8], int line){
-  int i, j;
-  
-  for(i = 0; i < 8; i++){
-    for(j = 0; j < 8; j++){
-      TEST_ASSERT_FLOAT_WITHIN(0.5, expectedMatrix[i][j], actualMatrix[i][j]);
-    }
-  }
-}
 
 void setUp(void){}
 
@@ -390,8 +384,12 @@ void test_release_compression_logic(){
 CEXCEPTION_T error;
   Stream *inStream = NULL;
   Stream *outStream = NULL;
+  State yProgress = {.state = 0, .index = 0};
+  State cbProgress = {.state = 0, .index = 0};
+  State crProgress = {.state = 0, .index = 0};
   float inputMatrixA[8][8], inputMatrixB[8][8], inputMatrixC[8][8];
   int size = 8;
+  uint32 bytesToWrite;
   RGB colorRGB;
   YCbCr lumaChrom;
 
@@ -422,13 +420,37 @@ CEXCEPTION_T error;
   twoD_DCT(8,inputMatrixB);
   twoD_DCT(8,inputMatrixC);
   
-  quantizationFunction50(8,inputMatrixA);
-  quantizationFunction50(8,inputMatrixB);
-  quantizationFunction50(8,inputMatrixC);
+  quantizationFunction50(8,inputMatrixA); //Y array
+  quantizationFunction50(8,inputMatrixB); //Cb array
+  quantizationFunction50(8,inputMatrixC); //Cr array
   
-  dumpMatrix(8, inputMatrixA);
-  dumpMatrix(8, inputMatrixB);
-  dumpMatrix(8, inputMatrixC);
+  // dumpMatrix(8, inputMatrixA);
+  // dumpMatrix(8, inputMatrixB);
+  // dumpMatrix(8, inputMatrixC);
+  
+  // bytesToWrite = huffmanEncodePull(&yProgress, inputMatrixA, dcLuminanceTable);
+  // write4Bytes(outStream, bytesToWrite);
+  
+  // while(yProgress.index != 64){
+    // bytesToWrite = huffmanEncodePull(&yProgress, inputMatrixA, acLuminanceTable);
+    // write4Bytes(outStream, bytesToWrite);
+  // }
+  
+  // bytesToWrite = huffmanEncodePull(&cbProgress, inputMatrixB, dcChrominanceTable);
+  // write4Bytes(outStream, bytesToWrite);
+  
+  // while(cbProgress.index != 64){
+    // bytesToWrite = huffmanEncodePull(&cbProgress, inputMatrixB, acChrominanceTable);
+    // write4Bytes(outStream, bytesToWrite);
+  // }
+  
+  // bytesToWrite = huffmanEncodePull(&crProgress, inputMatrixC, dcChrominanceTable);
+  // write4Bytes(outStream, bytesToWrite);
+  
+  // while(crProgress.index != 64){
+    // bytesToWrite = huffmanEncodePull(&crProgress, inputMatrixC, acChrominanceTable);
+    // write4Bytes(outStream, bytesToWrite);
+  // }
   
   //To Encoder..... can only detect state.index to stop when it is 64
   //To Byte Stuff, output to file in Y, Cb, Cr

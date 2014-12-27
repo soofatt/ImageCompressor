@@ -55,7 +55,16 @@ const int quantizationMatrixChrominance[8][8] = {{17, 18, 24, 47, 99, 99, 99, 99
                                                  {99, 99, 99, 99, 99, 99, 99, 99},
                                                  {99, 99, 99, 99, 99, 99, 99, 99},
                                                  {99, 99, 99, 99, 99, 99, 99, 99}};
-                                        
+
+/*  quantizationFunction
+ *  Desc.  : Function to perform quantization on the 2D array.
+ *           (Grouping of a range of values to a single discrete quantum value).
+ *
+ *  Input
+ *    inputMatrix       : Input 2D array.
+ *    quantizationMatrix: Fixed quantization matrix to be used for quantization.
+ *
+ */                                                 
 void quantizationFunction(int size, float inputMatrix[][size], const int quantizationMatrix[][8]){
   int quantizedMatrix[size][size];
   int row, col;
@@ -75,6 +84,14 @@ void quantizationFunction(int size, float inputMatrix[][size], const int quantiz
   }
 }       
 
+/*  dequantizationFunction
+ *  Desc.  : Function to perform dequantization on the 2D array.
+ *
+ *  Input
+ *    inputMatrix       : Input 2D array.
+ *    quantizationMatrix: Fixed quantization matrix to be used for dequantization.
+ *
+ */   
 void dequantizationFunction(int size, float inputMatrix[][size], const int quantizationMatrix[][8]){
   int dequantizedMatrix[size][size];
   int row, col;

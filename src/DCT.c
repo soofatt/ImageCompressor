@@ -5,6 +5,18 @@
 
 #define PI 3.14159265
 
+/*  cos_DCT
+ *  Desc.  : Function to obtain the cosine part of the DCT formula
+ *
+ *  Input
+ *    sumIndex        : Current index of the summation function.
+ *    imageMatrixIndex: Index of the data in the array/matrix.
+ *    numOfElement    : Number of elements in the array/matrix.
+ *
+ *  Output
+ *    cos(result) : The result.
+ *
+ */
 float cos_DCT(int sumIndex, int imageMatrixIndex, int numOfElement){
 	float nominator, denominator, result;
 	
@@ -16,6 +28,18 @@ float cos_DCT(int sumIndex, int imageMatrixIndex, int numOfElement){
 	return cos(result);
 }
 
+/*  adderFunction
+ *  Desc.  : Function to obtain the summation part of the DCT formula
+ *
+ *  Input
+ *    imageMatrix     : The input array/matrix.
+ *    imageMatrixIndex: Index of the data in the array/matrix.
+ *    numOfElement    : Number of elements in the array/matrix.
+ *
+ *  Output
+ *    result : The final summed result.
+ *
+ */
 float adderFunction(float *imageMatrix, int imageMatrixIndex, int numOfElement){
   int x;
   float result = 0, temp = 0;
@@ -28,6 +52,14 @@ float adderFunction(float *imageMatrix, int imageMatrixIndex, int numOfElement){
   return result;
 }
 
+/*  oneD_DCT_column
+ *  Desc.  : Function to perform DCT column-wise.
+ *
+ *  Input
+ *    imageMatrix : The input array/matrix.
+ *    col         : The column that will be used to perform the DCT conversion
+ *
+ */
 void oneD_DCT_column(int size, float imageMatrix[][size], int col){
   int u, i, j, numOfElement;
   float coeff = 0, additionTotal = 0;
@@ -53,6 +85,14 @@ void oneD_DCT_column(int size, float imageMatrix[][size], int col){
   
 }
 
+/*  oneD_DCT_row
+ *  Desc.  : Function to perform DCT row-wise.
+ *
+ *  Input
+ *    imageMatrix : The input array/matrix.
+ *    numOfElement: Number of elements in the array/matrix.
+ *
+ */
 void oneD_DCT_row(float *imageMatrix, int numOfElement){
   int u, i, j;
   float coeff = 0, additionTotal = 0;
@@ -76,6 +116,13 @@ void oneD_DCT_row(float *imageMatrix, int numOfElement){
   
 }
 
+/*  twoD_DCT
+ *  Desc.  : Function to perform DCT on a 2D array/matrix.
+ *
+ *  Input
+ *    imageMatrix : The input array/matrix.
+ *
+ */
 void twoD_DCT(int size, float imageMatrix[][size]){
   int i, row, col;
   

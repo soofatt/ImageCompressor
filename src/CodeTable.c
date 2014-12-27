@@ -3,6 +3,26 @@
 #include <assert.h>
 #include <malloc.h>
 
+/*  createTable
+ *  Desc.  : Function to tabulate the rearranged predetermined Huffman Table
+ *  e.g : To retrieve 0xF0
+ *  +---+
+ *  |   |
+ *  |   |    +---+
+ *  | F | -> | 0 |
+ *  +---+    |   |
+ *           |   |
+ *           +---+
+ *  Input
+ *    runSizeCode : Rearranged run/size according to code length
+ *    index       : To keep track of position in runSizeCode[] during recursion.
+ *    arrayLength : To make sure the function does not continue searching for elements in
+ *                  runSizeCode[] when there is no elements left.
+ *    
+ *  Output
+ *    codeTable : The generated code table.
+ *
+ */
 CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength){
   CodeTable *codeTable = malloc(sizeof(CodeTable));
   int slots = 0, currentIndex, shift, i = 0, j = 0;
@@ -59,6 +79,18 @@ CodeTable *createTable(RunSizeCode runSizeCode[], int index, int arrayLength){
   return codeTable;
 }
 
+/*  getShift
+ *  Desc.  : Subfunction to obtain the amount of bits to shift.
+ *           The output of this function will be used to obtain the slots
+ *           to be allocated for each runSizeCode in the table.
+ *
+ *  Input
+ *    length : Input code length.
+ *
+ *  Output
+ *    shift : The number of shifts required to get slots.
+ *
+ */
 int getShift(int length){
   int shift;
   

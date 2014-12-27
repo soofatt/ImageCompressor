@@ -30,3 +30,13 @@ void assertUINT82DArray(unsigned char inputArray[8][8], unsigned char compareArr
 		}
 	}
 }
+
+void assert8by8Matrix(float expectedMatrix[][8], float actualMatrix[0][8], int line){
+  int i, j;
+  
+  for(i = 0; i < 8; i++){
+    for(j = 0; j < 8; j++){
+      TEST_ASSERT_FLOAT_WITHIN(0.5, expectedMatrix[i][j], actualMatrix[i][j]);
+    }
+  }
+}

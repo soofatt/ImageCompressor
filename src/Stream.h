@@ -24,4 +24,5 @@ uint32 streamReadBits(Stream *in, int bitSize); //decide how many bit to read fr
 
 void writeStuffedByte(Stream *out, uint8 byte);
 char readStuffedByte(Stream *in);
+void write4Bytes(Stream *out, uint32 byte);
 #endif

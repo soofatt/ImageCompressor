@@ -148,6 +148,15 @@ void streamFlush(Stream *out){
   fputc(*(out->buffer),out->file);
 }
 
+/*  writeStuffedByte
+ *  Desc.  : Function to check if a byte to be written to file is 0xFF and stuff it with 0x00
+ *
+ *  Input
+ *    out   : The output stream handler. Contains output buffer that stores the data to be
+ *             written out to file.
+ *    byte  : The byte to be checked if it is 0xFF and to be written to file
+ *
+ */
 void writeStuffedByte(Stream *out, uint8 byte){
   char zeroByte = 0x00;
   
@@ -163,6 +172,16 @@ void writeStuffedByte(Stream *out, uint8 byte){
   }
 }
 
+/*  readStuffedByte
+ *  Desc.  : Function to check if a byte read is 0xFF and check if the next byte read is 0x00
+ *
+ *  Input
+ *    in   : The in stream handler.
+ *
+ *  Output
+ *    readByte : The read byte. Will return 0xFF only when the next byte read is 0x00.
+ *    
+ */
 char readStuffedByte(Stream *in){
   unsigned char readByte, tempByte;
   
@@ -178,4 +197,22 @@ char readStuffedByte(Stream *in){
   return readByte;
 }
 
-
+/*  write4Bytes
+ *  Desc.  : Function to chop 32 bits into 8 bit chunks to be written out
+ *
+ *  Input
+ *    out   : The output stream handler. Contains output buffer that stores the data to be
+ *             written out to file.
+ *    byte  : The byte to be chopped.
+ *
+ */
+void write4Bytes(Stream *out, uint32 byte){
+  int shift, i;
+  uint8 byteToWrite;
+  
+  for(i = 0, shift = 24; i < 4; i++){
+    byteToWrite = ((byte >> shift) & 0xff);
+    writeStuffedByte(out, byteToWrite);
+    shift -= 8;
+  }
+}
