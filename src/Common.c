@@ -42,6 +42,16 @@ void dumpMatrixInt(int size, short int matrix[][size]){
 	}
 }
 
+void convertToUINT16(float inputMatrix[][8], short int outputMatrix[][8]){
+  int i, j;
+  
+  for(i = 0; i < 8; i++){
+    for(j = 0; j < 8; j++){
+      outputMatrix[i][j] = inputMatrix[i][j];
+    }
+  }
+}
+
 void convertToFloat(short int inputMatrix[][8], float outputMatrix[][8]){
   int i, j;
   

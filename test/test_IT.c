@@ -388,10 +388,9 @@ CEXCEPTION_T error;
   State cbProgress = {.state = 0, .index = 0};
   State crProgress = {.state = 0, .index = 0};
   float inputMatrixA[8][8], inputMatrixB[8][8], inputMatrixC[8][8];
-  int size = 8;
-  uint32 bytesToWrite;
-  RGB colorRGB;
-  YCbCr lumaChrom;
+  short int outMatrixA[8][8], outMatrixB[8][8], outMatrixC[8][8];
+  int size = 8; uint32 bytesToWrite;
+  RGB colorRGB; YCbCr lumaChrom;
 
   uint8 R[8][8], G[8][8], B[8][8];
 	uint8 Y[8][8], Cb[8][8], Cr[8][8];
@@ -408,10 +407,14 @@ CEXCEPTION_T error;
   
   readFileToRGB(inStream,R,G,B);
   
+  convertToLuma(&colorRGB, &lumaChrom);
+  convertToChromaB(&colorRGB, &lumaChrom);
+  convertToChromaR(&colorRGB, &lumaChrom);
+  
   convertUINT8ToFloat(Y, inputMatrixA);
   convertUINT8ToFloat(Cb, inputMatrixB);
   convertUINT8ToFloat(Cr, inputMatrixC);
-
+  
   normalizeMatrix(8,inputMatrixA);
   normalizeMatrix(8,inputMatrixB);
   normalizeMatrix(8,inputMatrixC);
@@ -424,33 +427,32 @@ CEXCEPTION_T error;
   quantizationFunction50(8,inputMatrixB); //Cb array
   quantizationFunction50(8,inputMatrixC); //Cr array
   
-  // dumpMatrix(8, inputMatrixA);
-  // dumpMatrix(8, inputMatrixB);
-  // dumpMatrix(8, inputMatrixC);
+  convertToUINT16(inputMatrixA, outMatrixA);
+  convertToUINT16(inputMatrixB, outMatrixB);
+  convertToUINT16(inputMatrixC, outMatrixC);
+  bytesToWrite = huffmanEncodePull(&yProgress, outMatrixA, dcLuminanceTable);
+  write4Bytes(outStream, bytesToWrite);
   
-  // bytesToWrite = huffmanEncodePull(&yProgress, inputMatrixA, dcLuminanceTable);
-  // write4Bytes(outStream, bytesToWrite);
+  while(yProgress.index != 64){
+    bytesToWrite = huffmanEncodePull(&yProgress, outMatrixA, acLuminanceTable);
+    write4Bytes(outStream, bytesToWrite);
+  }
   
-  // while(yProgress.index != 64){
-    // bytesToWrite = huffmanEncodePull(&yProgress, inputMatrixA, acLuminanceTable);
-    // write4Bytes(outStream, bytesToWrite);
-  // }
+  bytesToWrite = huffmanEncodePull(&cbProgress, outMatrixB, dcChrominanceTable);
+  write4Bytes(outStream, bytesToWrite);
   
-  // bytesToWrite = huffmanEncodePull(&cbProgress, inputMatrixB, dcChrominanceTable);
-  // write4Bytes(outStream, bytesToWrite);
+  while(cbProgress.index != 64){
+    bytesToWrite = huffmanEncodePull(&cbProgress, outMatrixB, acChrominanceTable);
+    write4Bytes(outStream, bytesToWrite);
+  }
   
-  // while(cbProgress.index != 64){
-    // bytesToWrite = huffmanEncodePull(&cbProgress, inputMatrixB, acChrominanceTable);
-    // write4Bytes(outStream, bytesToWrite);
-  // }
+  bytesToWrite = huffmanEncodePull(&crProgress, outMatrixC, dcChrominanceTable);
+  write4Bytes(outStream, bytesToWrite);
   
-  // bytesToWrite = huffmanEncodePull(&crProgress, inputMatrixC, dcChrominanceTable);
-  // write4Bytes(outStream, bytesToWrite);
-  
-  // while(crProgress.index != 64){
-    // bytesToWrite = huffmanEncodePull(&crProgress, inputMatrixC, acChrominanceTable);
-    // write4Bytes(outStream, bytesToWrite);
-  // }
+  while(crProgress.index != 64){
+    bytesToWrite = huffmanEncodePull(&crProgress, outMatrixC, acChrominanceTable);
+    write4Bytes(outStream, bytesToWrite);
+  }
   
   //To Encoder..... can only detect state.index to stop when it is 64
   //To Byte Stuff, output to file in Y, Cb, Cr
