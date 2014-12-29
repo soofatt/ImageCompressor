@@ -182,7 +182,7 @@ void writeStuffedByte(Stream *out, uint8 byte){
  *    readByte : The read byte. Will return 0xFF only when the next byte read is 0x00.
  *    
  */
-char readStuffedByte(Stream *in){
+uint8 readStuffedByte(Stream *in){
   unsigned char readByte, tempByte;
   
   readByte = streamReadBits(in, 8);
@@ -215,4 +215,28 @@ void write4Bytes(Stream *out, uint32 byte){
     writeStuffedByte(out, byteToWrite);
     shift -= 8;
   }
+}
+
+/*  read4Bytes
+ *  Desc.  : Function to read 32 bits
+ *
+ *  Input
+ *    in   : The input stream handler
+ *
+ *  Output
+ *    bytesToRead : 32 bits concatenated together
+ *
+ */
+uint32 read4Bytes(Stream *in){
+  int i;
+  uint8 byteRead;
+  uint32 bytesToRead;
+  
+  for(i = 0; i < 4; i++){
+    byteRead = readStuffedByte(in);
+    bytesToRead |= byteRead;
+    if(i != 3)
+      bytesToRead <<= 8;
+  }
+  return bytesToRead;
 }

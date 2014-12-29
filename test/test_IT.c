@@ -475,6 +475,148 @@ CEXCEPTION_T error;
 // dumpMatrix(8, inputMatrixC);
 
 void xtest_release_decompression_logic(){
+  CEXCEPTION_T error;
+  Stream *inStream = NULL;
+  Stream *outStream = NULL;
+  CodeTable *dcDecodeLumTable = createTable(DCLumTable, 0, sizeof(DCLumTable)/sizeof(RunSizeCode));
+  CodeTable *dcDecodeChromTable = createTable(DCChromTable, 0, sizeof(DCChromTable)/sizeof(RunSizeCode));
+  CodeTable *acDecodeLumTable = createTable(ACLumTable, 0, sizeof(ACLumTable)/sizeof(RunSizeCode));
+  CodeTable *acDecodeChromTable = createTable(ACChromTable, 0, sizeof(ACChromTable)/sizeof(RunSizeCode));
+  uint32 bytesToRead, catAndSymbol, runAndDecodedSymbol;
+  uint16 codeWord, symbol, runLength, category;
+  uint8 runAndSize;
+  int16 valueDecodedSymbol;
+  int count = 0;
+  
+  Try{
+    inStream = openStream("test/Data/outputData.7z.010", "rb");
+    outStream = openStream("test/Data/outputDataDecompress.7z.010", "wb");
+  }Catch(error){
+    TEST_ASSERT_EQUAL(ERR_FILE_NOT_EXIST, error);
+  }
+  
+  /*bytesToRead = read4Bytes(inStream);
+  
+  codeWord = bytesToRead >> 16;
+  symbol = bytesToRead & 0xffff;
+  
+  runAndSize = huffmanDecode(codeWord, dcDecodeLumTable);
+  runLength = runAndSize >> 4;
+  category = runAndSize & 0xf;
+  
+  catAndSymbol = category;
+  catAndSymbol = (catAndSymbol << 16) | symbol;
+  
+  valueDecodedSymbol = valueDecoding(catAndSymbol);
+  
+  runAndDecodedSymbol = runLength;
+  runAndDecodedSymbol = (runAndDecodedSymbol << 16) | valueDecodedSymbol;
+  
+  //runAndDecodedSymbol to run-length decode
+  while(count < 63){
+    bytesToRead = read4Bytes(inStream);
+  
+    codeWord = bytesToRead >> 16;
+    symbol = bytesToRead & 0xffff;
+    
+    runAndSize = huffmanDecode(codeWord, acDecodeLumTable);
+    runLength = runAndSize >> 4;
+    category = runAndSize & 0xf;
+    
+    catAndSymbol = category;
+    catAndSymbol = (catAndSymbol << 16) | symbol;
+    
+    valueDecodedSymbol = valueDecoding(catAndSymbol);
+    
+    runAndDecodedSymbol = runLength;
+    runAndDecodedSymbol = (runAndDecodedSymbol << 16) | valueDecodedSymbol;
+    //runAndDecodedSymbol to run-length decode
+    
+    count++;
+  }
+  
+  bytesToRead = read4Bytes(inStream);
+  
+  codeWord = bytesToRead >> 16;
+  symbol = bytesToRead & 0xffff;
+  
+  runAndSize = huffmanDecode(codeWord, dcDecodeChromTable);
+  runLength = runAndSize >> 4;
+  category = runAndSize & 0xf;
+  
+  catAndSymbol = category;
+  catAndSymbol = (catAndSymbol << 16) | symbol;
+  
+  valueDecodedSymbol = valueDecoding(catAndSymbol);
+  
+  runAndDecodedSymbol = runLength;
+  runAndDecodedSymbol = (runAndDecodedSymbol << 16) | valueDecodedSymbol;
+  
+  //runAndDecodedSymbol to run-length decode
+  while(count < 63){
+    bytesToRead = read4Bytes(inStream);
+  
+    codeWord = bytesToRead >> 16;
+    symbol = bytesToRead & 0xffff;
+    
+    runAndSize = huffmanDecode(codeWord, acDecodeChromTable);
+    runLength = runAndSize >> 4;
+    category = runAndSize & 0xf;
+    
+    catAndSymbol = category;
+    catAndSymbol = (catAndSymbol << 16) | symbol;
+    
+    valueDecodedSymbol = valueDecoding(catAndSymbol);
+    
+    runAndDecodedSymbol = runLength;
+    runAndDecodedSymbol = (runAndDecodedSymbol << 16) | valueDecodedSymbol;
+    //runAndDecodedSymbol to run-length decode
+    
+    count++;
+  }
+  
+  bytesToRead = read4Bytes(inStream);
+  
+  codeWord = bytesToRead >> 16;
+  symbol = bytesToRead & 0xffff;
+  
+  runAndSize = huffmanDecode(codeWord, dcDecodeChromTable);
+  runLength = runAndSize >> 4;
+  category = runAndSize & 0xf;
+  
+  catAndSymbol = category;
+  catAndSymbol = (catAndSymbol << 16) | symbol;
+  
+  valueDecodedSymbol = valueDecoding(catAndSymbol);
+  
+  runAndDecodedSymbol = runLength;
+  runAndDecodedSymbol = (runAndDecodedSymbol << 16) | valueDecodedSymbol;
+  
+  //runAndDecodedSymbol to run-length decode
+  while(count < 63){
+    bytesToRead = read4Bytes(inStream);
+  
+    codeWord = bytesToRead >> 16;
+    symbol = bytesToRead & 0xffff;
+    
+    runAndSize = huffmanDecode(codeWord, acDecodeChromTable);
+    runLength = runAndSize >> 4;
+    category = runAndSize & 0xf;
+    
+    catAndSymbol = category;
+    catAndSymbol = (catAndSymbol << 16) | symbol;
+    
+    valueDecodedSymbol = valueDecoding(catAndSymbol);
+    
+    runAndDecodedSymbol = runLength;
+    runAndDecodedSymbol = (runAndDecodedSymbol << 16) | valueDecodedSymbol;
+    //runAndDecodedSymbol to run-length decode
+    
+    count++;
+  }*/
+  
+  closeStream(inStream);
+  closeStream(outStream);
   //Huffman decoder
   //To Run Length Decode
   //Loop 3 times to get Y Cb Cr arrays

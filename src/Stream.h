@@ -23,6 +23,7 @@ uint32 streamReadBit(Stream *in);
 uint32 streamReadBits(Stream *in, int bitSize); //decide how many bit to read from the file
 
 void writeStuffedByte(Stream *out, uint8 byte);
-char readStuffedByte(Stream *in);
+uint8 readStuffedByte(Stream *in);
 void write4Bytes(Stream *out, uint32 byte);
+uint32 read4Bytes(Stream *in);
 #endif
